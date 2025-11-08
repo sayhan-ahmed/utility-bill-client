@@ -40,21 +40,3 @@
     hover:shadow-lg transition-all duration-300 ease-out hover:-translate-y-1;
   }
 }
-
-/* smooth outlined text like "IT Solutions" */
-.text-stroke {
-  -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.6);
-  color: transparent;
-}
-
-/* subtle white blob behind nav button */
-.nav-blob {
-  position: absolute;
-  width: 72px;
-  height: 72px;
-  background: white;
-  border-radius: 9999px;
-  opacity: 0.9;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) inset,
-    0 8px 16px rgba(0, 0, 0, 0.08);
-}

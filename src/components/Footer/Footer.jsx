@@ -6,7 +6,7 @@ import { NavLink } from "react-router";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#F5F7EF] text-[#1E2631]">
+    <footer className="bg-gray-100/40 text-[#1E2631]">
       {/* -----Top: Logo Left, Social Right----- */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-10">
         <div className="flex items-center justify-between">

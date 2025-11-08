@@ -6,7 +6,7 @@ import { IoBulbOutline } from "react-icons/io5";
 
 const Category = () => {
   return (
-    <div className="bg-[#F7F8F2] bg-linear-to-br from-purple-100/70 via-yellow-50 to-transparent">
+    <div className="bg-linear-to-br from-purple-100/70 via-yellow-50 to-red-50">
       <section className="py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* -----Left Side----- */}
