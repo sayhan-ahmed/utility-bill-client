@@ -4,6 +4,10 @@ import Home from "../pages/Home/Home";
 import Bills from "../pages/Bills/Bills";
 import Loader from "../components/Loader/Loader";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
+import Register from "../pages/Auth/Register";
+import Login from "../pages/Auth/Login";
+import MyPayBills from "../pages/MyPayBills/MyPayBills";
+import PrivateRoute from "../provider/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -18,8 +22,24 @@ const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: "/bills",
+        path: "bills",
         Component: Bills,
+      },
+      {
+        path: "register",
+        Component: Register,
+      },
+      {
+        path: "login",
+        Component: Login,
+      },
+      {
+        path: "my-bills",
+        element: (
+          <PrivateRoute>
+            <MyPayBills></MyPayBills>
+          </PrivateRoute>
+        ),
       },
     ],
   },

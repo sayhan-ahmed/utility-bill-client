@@ -15,7 +15,7 @@ const Footer = () => {
             <div className="flex items-center gap-2">
               <span className="brand-logo">B</span>
               <span className="text-2xl font-semibold tracking-tight">
-                BillEase
+                Bill<span className="text-green-600">Ease</span>
               </span>
             </div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
