@@ -8,6 +8,7 @@ import Register from "../pages/Auth/Register";
 import Login from "../pages/Auth/Login";
 import MyPayBills from "../pages/MyPayBills/MyPayBills";
 import PrivateRoute from "../provider/PrivateRoute";
+import BillDetails from "../pages/BillDetails/BillDetails";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,14 @@ const router = createBrowserRouter([
       {
         path: "bills",
         Component: Bills,
+      },
+      {
+        path: "bills/:id",
+        element: (
+          <PrivateRoute>
+            <BillDetails></BillDetails>
+          </PrivateRoute>
+        ),
       },
       {
         path: "register",
