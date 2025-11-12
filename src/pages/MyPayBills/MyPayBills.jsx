@@ -12,7 +12,7 @@ import {
   FiTrash2,
   FiPhone,
 } from "react-icons/fi";
-import { FaBangladeshiTakaSign, FaPhone } from "react-icons/fa6";
+import { FaBangladeshiTakaSign } from "react-icons/fa6";
 
 export default function MyPayBills() {
   const { user, loading: authLoading } = useContext(AuthContext);

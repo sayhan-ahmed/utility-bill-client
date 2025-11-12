@@ -20,6 +20,8 @@ import {
   FaRegFileAlt,
 } from "react-icons/fa";
 import { FaBangladeshiTakaSign } from "react-icons/fa6";
+import Lottie from "lottie-react";
+import emptyAnimation from "../../assets/lottie/empty-animation.json";
 
 const API_BASE = "http://localhost:3000";
 
@@ -47,7 +49,6 @@ export default function BillDetails() {
       .then((data) => setBill(data))
       .catch((err) => {
         console.error("Failed to load bill:", err);
-        toast.error("Failed to load bill");
       })
       .finally(() => setLoading(false));
   }, [id]);
@@ -145,15 +146,22 @@ export default function BillDetails() {
   // if bill is not found
   if (!bill) {
     return (
-      <div className="min-h-[60vh] flex flex-col justify-center items-center text-gray-600">
-        <FaExclamationTriangle className="w-16 h-16 text-gray-400 mb-4" />
-        <h2 className="text-2xl font-semibold">Bill Not Found</h2>
-        <p>The bill you are looking for doesn't exist.</p>
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-linear-to-br from-indigo-50 to-purple-50">
+        {/* lottie animation */}
+        <div className="w-64 h-64 md:w-80 md:h-80">
+          <Lottie animationData={emptyAnimation} loop autoplay />
+        </div>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mt-8 text-center">
+          Bill Not Found
+        </h2>
+        <p className="mt-3 text-base md:text-lg text-gray-600 text-center max-w-lg">
+          The bill you are looking for doesn’t exist or has been removed.
+        </p>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate("/bills")}
-          className="mt-6 px-6 py-2.5 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition-all duration-300 flex items-center justify-center gap-2"
+          className="mt-8 px-8 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300 flex items-center gap-2"
         >
           <FaArrowLeft className="w-5 h-5" />
           Back to Bills

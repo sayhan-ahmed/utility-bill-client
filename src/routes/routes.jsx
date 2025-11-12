@@ -9,6 +9,7 @@ import Login from "../pages/Auth/Login";
 import MyPayBills from "../pages/MyPayBills/MyPayBills";
 import PrivateRoute from "../provider/PrivateRoute";
 import BillDetails from "../pages/BillDetails/BillDetails";
+import RouteTitle from "../components/RouteTitle/RouteTitle";
 
 const router = createBrowserRouter([
   {
@@ -20,33 +21,53 @@ const router = createBrowserRouter([
       {
         index: true,
         path: "/",
-        Component: Home,
+        element: (
+          <RouteTitle title="Home">
+            <Home />
+          </RouteTitle>
+        ),
       },
       {
         path: "bills",
-        Component: Bills,
+        element: (
+          <RouteTitle title="All Bills">
+            <Bills />
+          </RouteTitle>
+        ),
       },
       {
         path: "bills/:id",
         element: (
           <PrivateRoute>
-            <BillDetails></BillDetails>
+            <RouteTitle title="Bill Details">
+              <BillDetails />
+            </RouteTitle>
           </PrivateRoute>
         ),
       },
       {
         path: "register",
-        Component: Register,
+        element: (
+          <RouteTitle title="Register">
+            <Register />
+          </RouteTitle>
+        ),
       },
       {
         path: "login",
-        Component: Login,
+        element: (
+          <RouteTitle title="Login">
+            <Login />
+          </RouteTitle>
+        ),
       },
       {
         path: "my-bills",
         element: (
           <PrivateRoute>
-            <MyPayBills></MyPayBills>
+            <RouteTitle title="My Bills">
+              <MyPayBills />
+            </RouteTitle>
           </PrivateRoute>
         ),
       },
