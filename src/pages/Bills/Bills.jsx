@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
@@ -7,12 +8,14 @@ import {
   PlusCircle,
   Loader2,
   Send,
+  Mail,
 } from "lucide-react";
 import { FaBangladeshiTakaSign } from "react-icons/fa6";
 import { LuNewspaper } from "react-icons/lu";
 import toast from "react-hot-toast";
 import AuthContext from "../../provider/AuthContext";
 
+// Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -33,7 +36,9 @@ const formVariants = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.5, delay: 0.2 } },
 };
 
+// Main component
 export default function Bills() {
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [bills, setBills] = useState([]);
   const [categories, setCategories] = useState(["all"]);
@@ -43,17 +48,14 @@ export default function Bills() {
 
   const [newBillForm, setNewBillForm] = useState({
     title: "",
-    category: "electricity",
+    category: "gas",
     amount: "",
     location: "",
     description: "",
     image: "",
     date: new Date().toISOString().slice(0, 10),
+    email: "",
   });
-
-  const handleNavigate = (path) => {
-    window.location.href = path;
-  };
 
   useEffect(() => {
     fetch("http://localhost:3000/bills")
@@ -83,6 +85,7 @@ export default function Bills() {
       .finally(() => setLoading(false));
   }, [selectedCategory]);
 
+  // Form handlers
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     if (name === "amount") {
@@ -102,7 +105,10 @@ export default function Bills() {
 
     const billData = {
       ...newBillForm,
-      email: user.email,
+      email: newBillForm.email,
+      category:
+        newBillForm.category.charAt(0).toUpperCase() +
+        newBillForm.category.slice(1),
     };
 
     fetch("http://localhost:3000/bills", {
@@ -115,17 +121,25 @@ export default function Bills() {
         if (newlyAddedBill.insertedId) {
           toast.success("Bill added successfully!");
 
-          const newBillWithId = { ...billData, _id: newlyAddedBill.insertedId };
-          setBills((prevBills) => [newBillWithId, ...prevBills]);
+          setLoading(true);
+          const url = "http://localhost:3000/bills";
+          const query =
+            selectedCategory !== "all" ? `?category=${selectedCategory}` : "";
+
+          fetch(url + query)
+            .then((res) => res.json())
+            .then((data) => setBills(data))
+            .finally(() => setLoading(false));
 
           setNewBillForm({
             title: "",
-            category: "electricity",
+            category: "gas",
             amount: "",
             location: "",
             description: "",
             image: "",
             date: new Date().toISOString().slice(0, 10),
+            email: "",
           });
         } else {
           toast.error("Failed to add bill.");
@@ -142,7 +156,7 @@ export default function Bills() {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10 min-h-screen">
-      {/* -----Page Header----- */}
+      {/* ----- Page Header ----- */}
       <div className="relative mb-8">
         <div className="absolute -left-6 -top-6 h-24 w-24 opacity-20 hidden sm:block">
           <svg viewBox="0 0 100 100" className="h-full w-full">
@@ -166,12 +180,11 @@ export default function Bills() {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
-        {/* -----Left Column: Bill List----- */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
+        {/* ----- Left column: Cards ----- */}
         <div className="lg:col-span-3">
           <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
             <h3 className="text-2xl font-semibold text-gray-800">All Bills</h3>
-            {/* -----Category Dropdown----- */}
             <div className="relative">
               <select
                 value={selectedCategory}
@@ -190,9 +203,8 @@ export default function Bills() {
             </div>
           </div>
 
-          {/* Bill List or Loading Skeleton */}
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div
                   key={i}
@@ -214,7 +226,7 @@ export default function Bills() {
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
               >
                 {bills.length > 0 ? (
                   bills.map((bill) => (
@@ -233,8 +245,6 @@ export default function Bills() {
                           className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
-
-                      {/* -----Card info----- */}
                       <div className="p-4 flex flex-col grow">
                         <div className="grow">
                           <span className="inline-block bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full mb-2">
@@ -254,11 +264,10 @@ export default function Bills() {
                             </p>
                           </div>
                         </div>
-
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => handleNavigate(`/bills/${bill._id}`)}
+                          onClick={() => navigate(`/bills/${bill._id}`)}
                           className="mt-4 w-full inline-flex items-center justify-center gap-1 text-sm font-medium text-white bg-green-600 px-4 py-2.5 rounded-lg hover:bg-green-700 transition-colors"
                         >
                           See Details →
@@ -284,15 +293,15 @@ export default function Bills() {
           )}
         </div>
 
-        {/* -----Right Column: Add Bill Form----- */}
+        {/* ----- Right column: Add bill form --- */}
         <motion.div
           variants={formVariants}
           initial="hidden"
           animate="visible"
           className="lg:col-span-1"
         >
-          <div className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 sticky top-10">
-            <div className="flex items-center gap-3 mb-4">
+          <div className="bg-white p-5 pr-0 rounded-2xl shadow-xl border border-gray-100 sticky top-10">
+            <div className="flex items-center gap-3 mb-4 pt-2">
               <div className="p-2 bg-green-100 rounded-full">
                 <PlusCircle className="w-6 h-6 text-green-700" />
               </div>
@@ -301,13 +310,26 @@ export default function Bills() {
               </h3>
             </div>
 
-            <form onSubmit={handleFormSubmit} className="space-y-4">
+            <form
+              onSubmit={handleFormSubmit}
+              className="space-y-4 lg:max-h-[70vh] lg:overflow-y-auto lg:p-2"
+            >
               <InputField
                 label="Bill Title"
                 name="title"
                 value={newBillForm.title}
                 onChange={handleFormChange}
-                placeholder="e.g., Monthly Electricity Bill"
+                placeholder="e.g., Gas Bill - May 2025"
+                required
+              />
+              <InputField
+                label="Billing Email"
+                name="email"
+                type="email"
+                icon={Mail}
+                value={newBillForm.email}
+                onChange={handleFormChange}
+                placeholder="payment@titas.com"
                 required
               />
               <div className="grid grid-cols-2 gap-4">
@@ -317,11 +339,10 @@ export default function Bills() {
                   value={newBillForm.category}
                   onChange={handleFormChange}
                   options={[
+                    { value: "gas", label: "Gas" },
                     { value: "electricity", label: "Electricity" },
                     { value: "water", label: "Water" },
-                    { value: "gas", label: "Gas" },
                     { value: "internet", label: "Internet" },
-                    { value: "other", label: "Other" },
                   ]}
                   required
                 />
@@ -331,7 +352,7 @@ export default function Bills() {
                   type="number"
                   value={newBillForm.amount}
                   onChange={handleFormChange}
-                  placeholder="e.g., 1200"
+                  placeholder="e.g., 500"
                   required
                 />
               </div>
@@ -340,7 +361,7 @@ export default function Bills() {
                 name="location"
                 value={newBillForm.location}
                 onChange={handleFormChange}
-                placeholder="e.g., Mirpur, Dhaka"
+                placeholder="e.g., Mirpur-10, Dhaka"
                 required
               />
               <InputField
@@ -389,15 +410,24 @@ export default function Bills() {
 
 // Helper Form Components
 
-const InputField = ({ label, ...props }) => (
+const InputField = ({ label, icon: Icon, ...props }) => (
   <div>
     <label className="block text-sm font-medium text-gray-700 mb-1">
       {label}
     </label>
-    <input
-      {...props}
-      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-600"
-    />
+    <div className="relative">
+      <input
+        {...props}
+        className={`w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-600 ${
+          Icon ? "pl-10" : ""
+        }`}
+      />
+      {Icon && (
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <Icon className="w-5 h-5 text-gray-400" />
+        </div>
+      )}
+    </div>
   </div>
 );
 

@@ -19,6 +19,7 @@ import {
   FaHome,
   FaRegFileAlt,
 } from "react-icons/fa";
+import { FaBangladeshiTakaSign } from "react-icons/fa6";
 
 const API_BASE = "http://localhost:3000";
 
@@ -210,9 +211,9 @@ export default function BillDetails() {
                   value={bill.date}
                 />
                 <InfoItem
-                  icon={FaDollarSign}
+                  icon={FaBangladeshiTakaSign}
                   label="Amount"
-                  value={`৳${bill.amount}`}
+                  value={`${bill.amount} Taka`}
                   valueClass="text-3xl font-bold text-green-600"
                 />
               </div>
@@ -304,8 +305,8 @@ export default function BillDetails() {
                   />
                   <ReadOnlyField
                     label="Amount"
-                    value={`৳${bill.amount}`}
-                    icon={FaDollarSign}
+                    value={`${bill.amount}.00`}
+                    icon={FaBangladeshiTakaSign}
                     isAmount={true}
                   />
                 </div>
@@ -399,7 +400,11 @@ export default function BillDetails() {
 
 const InfoItem = ({ icon: Icon, label, value, valueClass = "" }) => (
   <div className="flex items-start">
-    <Icon className="w-5 h-5 mt-1 text-green-600 shrink-0" />
+    {Icon && (
+      <div>
+        <Icon className="w-5 h-5 mt-1 text-green-600 shrink-0" />
+      </div>
+    )}
     <div className="ml-3">
       <h3 className="text-sm font-medium text-gray-500">{label}</h3>
       <p className={`text-lg font-semibold text-gray-900 ${valueClass}`}>
@@ -418,8 +423,7 @@ const InputField = ({ label, icon: Icon, ...props }) => (
       <input
         type="text"
         {...props}
-        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg shadow-sm
-                   focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
       />
       {Icon && (
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -438,8 +442,7 @@ const TextAreaField = ({ label, icon: Icon, ...props }) => (
     <div className="relative">
       <textarea
         {...props}
-        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg shadow-sm
-                   focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
       ></textarea>
       {Icon && (
         <div className="absolute top-3.5 left-0 flex items-center pl-3 pointer-events-none">
@@ -460,8 +463,8 @@ const ReadOnlyField = ({ label, value, icon: Icon, isAmount = false }) => (
         type="text"
         value={value}
         readOnly
-        className={`w-full pl-10 pr-4 py-2.5 border border-gray-200 bg-gray-100 text-gray-600 rounded-lg truncate
-                    ${isAmount ? "text-xl font-bold text-green-700" : ""}`}
+        className={`w-full pr-4 py-2.5 border border-gray-200 bg-gray-100 text-gray-600 rounded-lg truncate 
+          ${isAmount ? "font-bold text-green-700" : ""} ${Icon ? "pl-10" : ""}`}
       />
       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
         <Icon className="w-5 h-5 text-gray-500" />
