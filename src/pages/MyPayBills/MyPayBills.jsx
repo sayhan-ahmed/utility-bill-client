@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../../provider/AuthContext";
 import toast from "react-hot-toast";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import {
   FiUser,
@@ -13,11 +13,34 @@ import {
   FiPhone,
 } from "react-icons/fi";
 import { FaBangladeshiTakaSign } from "react-icons/fa6";
+import {
+  FaTimes,
+  FaLock,
+  FaUser,
+  FaHome,
+  FaPhone,
+  FaRegFileAlt,
+  FaSpinner,
+  FaCreditCard,
+} from "react-icons/fa";
 
 export default function MyPayBills() {
   const { user, loading: authLoading } = useContext(AuthContext);
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Modal + form state
+  const [updateOpen, setUpdateOpen] = useState(false);
+  const [selectedBill, setSelectedBill] = useState(null);
+  const [form, setForm] = useState({
+    username: "",
+    amount: "",
+    address: "",
+    phone: "",
+    date: "",
+    info: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -84,7 +107,90 @@ export default function MyPayBills() {
   const handleDownload = () =>
     toast("PDF download coming soon!", { icon: "Warning" });
 
-  // Loading state UI
+  const openUpdateModal = (bill) => {
+    const isoDate = bill?.date
+      ? new Date(bill.date).toISOString().slice(0, 10)
+      : "";
+    setSelectedBill(bill);
+    setForm({
+      username: bill?.username || user?.displayName || "",
+      amount: bill?.amount ? String(bill.amount) : "",
+      address: bill?.Address || bill?.address || "",
+      phone: bill?.Phone || bill?.phone || "",
+      date: isoDate,
+      info: bill?.info || "",
+    });
+    setUpdateOpen(true);
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setForm((s) => ({ ...s, [name]: value }));
+  };
+
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedBill) return toast.error("No bill selected");
+
+    if (!form.amount || isNaN(Number(form.amount))) {
+      return toast.error("Please enter a valid amount");
+    }
+    if (!form.phone || form.phone.length < 6) {
+      return toast.error("Please enter a valid phone");
+    }
+
+    setSubmitting(true);
+    const updates = {
+      amount: form.amount,
+      Address: form.address,
+      Phone: form.phone,
+      date: form.date ? new Date(form.date).toISOString() : undefined,
+    };
+
+    Object.keys(updates).forEach(
+      (k) => updates[k] === undefined && delete updates[k]
+    );
+
+    try {
+      const res = await fetch(
+        `http://localhost:3000/payments/${selectedBill._id || selectedBill.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updates),
+        }
+      );
+
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "Update failed");
+        throw new Error(txt || "Update failed");
+      }
+
+      const updated = await res.json();
+
+      setPayments((prev) =>
+        prev.map((p) => {
+          const idP = p._id || p.id;
+          const idSel = selectedBill._id || selectedBill.id;
+          if (String(idP) === String(idSel)) {
+            return { ...p, ...updated };
+          }
+          return p;
+        })
+      );
+
+      toast.success("Payment updated");
+      setUpdateOpen(false);
+      setSelectedBill(null);
+    } catch (err) {
+      console.error(err);
+      toast.error("Update failed");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Loading UI
   if (loading || authLoading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-indigo-50 to-purple-50 p-4">
@@ -327,7 +433,7 @@ export default function MyPayBills() {
                 <tbody>
                   {payments.map((p) => (
                     <tr
-                      key={p.id}
+                      key={p._id || p.id}
                       className="border-b border-gray-100 hover:bg-gray-50"
                     >
                       <td className="py-3 px-2 whitespace-nowrap">
@@ -344,17 +450,19 @@ export default function MyPayBills() {
                         {p.Phone || "-"}
                       </td>
                       <td className="py-3 px-2 whitespace-nowrap">
-                        {formatDate(p.date)}
+                        {p.date ? formatDate(p.date) : "-"}
                       </td>
                       <td className="py-3 px-2 text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
                           <button
+                            onClick={() => openUpdateModal(p)}
                             className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition"
                             title="Update"
                           >
                             <FiEdit className="w-4 h-4" />
                           </button>
                           <button
+                            onClick={() => handleDelete(p._id || p.id)}
                             className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition"
                             title="Delete"
                           >
@@ -370,6 +478,213 @@ export default function MyPayBills() {
           )}
         </motion.div>
       </div>
+
+      {/* ----- Update Modal ----- */}
+      <AnimatePresence>
+        {updateOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => !submitting && setUpdateOpen(false)}
+          >
+            <motion.div
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -50, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden"
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-5 border-b border-gray-200">
+                <h3 className="text-2xl font-bold text-gray-900">
+                  Update Bill
+                </h3>
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => !submitting && setUpdateOpen(false)}
+                  className="p-1 rounded-full text-gray-400 hover:bg-gray-100"
+                >
+                  <FaTimes className="w-6 h-6" />
+                </motion.button>
+              </div>
+
+              {/* Modal Form */}
+              <form
+                onSubmit={handleUpdateSubmit}
+                className="p-6 space-y-4 max-h-[70vh] overflow-y-auto"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <ReadOnlyField
+                    label="Email"
+                    value={user?.email || ""}
+                    icon={FaLock}
+                  />
+                  <ReadOnlyField
+                    label="Bill ID"
+                    value={selectedBill?._id || selectedBill?.id || ""}
+                    icon={FaLock}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InputField
+                    label="Amount"
+                    name="amount"
+                    icon={FaBangladeshiTakaSign}
+                    value={form.amount}
+                    onChange={handleFormChange}
+                    required
+                  />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Date
+                    </label>
+                    <input
+                      type="date"
+                      name="date"
+                      value={form.date}
+                      onChange={handleFormChange}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    />
+                  </div>
+                </div>
+
+                <InputField
+                  label="Full Name"
+                  name="username"
+                  icon={FaUser}
+                  value={form.username}
+                  onChange={handleFormChange}
+                  placeholder="Your full name"
+                  required
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <InputField
+                    label="Address"
+                    name="address"
+                    icon={FaHome}
+                    value={form.address}
+                    onChange={handleFormChange}
+                    placeholder="Your address"
+                    required
+                  />
+                  <InputField
+                    label="Phone"
+                    name="phone"
+                    icon={FaPhone}
+                    value={form.phone}
+                    onChange={handleFormChange}
+                    placeholder="01xxxxxxxxx"
+                    required
+                  />
+                </div>
+
+                <TextAreaField
+                  label="Additional Info (Optional)"
+                  name="info"
+                  icon={FaRegFileAlt}
+                  value={form.info}
+                  onChange={handleFormChange}
+                  rows="3"
+                />
+
+                <div className="flex items-center justify-end gap-3 pt-4">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    type="button"
+                    onClick={() => !submitting && setUpdateOpen(false)}
+                    className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-all"
+                  >
+                    Cancel
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    type="submit"
+                    disabled={submitting}
+                    className="px-6 py-2.5 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition-all flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    style={{ minWidth: "180px" }}
+                  >
+                    {submitting ? (
+                      <FaSpinner className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <FaCreditCard className="w-5 h-5" />
+                    )}
+                    {submitting ? "Updating..." : "Save Changes"}
+                  </motion.button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
+
+/* Reusable components  */
+const InputField = ({ label, icon: Icon, ...props }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    <div className="relative">
+      <input
+        type="text"
+        {...props}
+        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+      />
+      {Icon && (
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <Icon className="w-5 h-5 text-gray-400" />
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+const TextAreaField = ({ label, icon: Icon, ...props }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    <div className="relative">
+      <textarea
+        {...props}
+        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+      ></textarea>
+      {Icon && (
+        <div className="absolute top-3.5 left-0 flex items-center pl-3 pointer-events-none">
+          <Icon className="w-5 h-5 text-gray-400" />
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+const ReadOnlyField = ({ label, value, icon: Icon, isAmount = false }) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    <div className="relative">
+      <input
+        type="text"
+        value={value}
+        readOnly
+        className={`w-full pr-4 py-2.5 border border-gray-200 bg-gray-100 text-gray-600 rounded-lg truncate 
+          ${isAmount ? "font-bold text-green-700" : ""} ${Icon ? "pl-10" : ""}`}
+      />
+      {Icon && (
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <Icon className="w-5 h-5 text-gray-500" />
+        </div>
+      )}
+    </div>
+  </div>
+);
