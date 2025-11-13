@@ -43,8 +43,30 @@ const Login = () => {
     toast.promise(
       googleSignIn()
         .then((result) => {
-          setUser(result.user);
+          const user = result.user;
+          setUser(user);
           navigate(location.state?.from || "/");
+          const newUser = {
+            user: user.displayName,
+            email: user.email,
+            image: user.photoURL,
+          };
+          fetch("http://localhost:3000/users", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(newUser),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              console.log("saved user:", data);
+            })
+            .catch((err) => {
+              console.error("❌ Save failed:", err);
+            });
+
+          return result;
         })
         .catch((error) => {
           throw new Error(`Google Login failed.\nReason: ${error.code}`);

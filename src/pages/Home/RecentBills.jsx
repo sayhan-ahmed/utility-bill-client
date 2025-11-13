@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Calendar, MapPin, Tag, ArrowRight } from "lucide-react";
 import { LuNewspaper } from "react-icons/lu";
 import AuthContext from "../../provider/AuthContext";
@@ -71,8 +71,9 @@ export default function RecentBills() {
             Pay Your <span className="text-green-700">Bills</span> Now!
           </h2>
         </div>
-
-        <button className="btn-secondary">Explore All Bills</button>
+        <Link to={"/bills"}>
+          <button className="btn-secondary">Explore All Bills</button>
+        </Link>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {bills.map((bill, idx) => (

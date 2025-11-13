@@ -7,7 +7,6 @@ import {
   FiUser,
   FiCalendar,
   FiFileText,
-  FiDownload,
   FiEdit,
   FiTrash2,
   FiPhone,
@@ -24,6 +23,7 @@ import {
   FaSpinner,
   FaCreditCard,
 } from "react-icons/fa";
+import DownloadReport from "./DownloadReport";
 
 export default function MyPayBills() {
   const { user, loading: authLoading } = useContext(AuthContext);
@@ -104,9 +104,6 @@ export default function MyPayBills() {
     minute: "2-digit",
     hour12: true,
   });
-
-  const handleDownload = () =>
-    toast("PDF download coming soon!", { icon: "Warning" });
 
   // For updating payments
   const openUpdateModal = (bill) => {
@@ -261,15 +258,18 @@ export default function MyPayBills() {
             My Bill Statement
           </h1>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleDownload}
-              className="group flex items-center justify-center gap-2 rounded-xl bg-green-600 hover:bg-green-700 px-4 sm:px-6 py-3 text-white font-medium shadow-lg hover:shadow-xl transition-all"
-            >
-              <FiDownload className="w-5 h-5" />
-              <span className="text-sm sm:text-base">Download Report</span>
-            </motion.button>
+            <DownloadReport
+              user={user}
+              payments={payments}
+              totalPaid={totalPaid}
+              totalBills={totalBills}
+              periodStart={periodStart}
+              periodEnd={periodEnd}
+              avgPerBill={avgPerBill}
+              avgMonthly={avgMonthly}
+              months={months}
+              fileTime={fileTime}
+            />
             <div className="flex items-center justify-center gap-2 bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2 shadow">
               {user?.photoURL ? (
                 <img
