@@ -32,22 +32,44 @@ const slides = [
   },
 ];
 
-export default function Slider() {
+export default function Slider({ theme }) {
   return (
-    <section className="py-6 mx-10">
+    <section
+      className={`py-6 mx-10 ${theme === "dark" ? "dark:bg-gray-900" : ""}`}
+    >
       <div className="relative">
         {/* Prev button */}
         <div className="swiper-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20">
-          <div className="absolute w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] bg-white rounded-full -left-2 sm:-left-3 md:-left-4 top-1/2 -translate-y-1/2 -z-10" />
-          <button className="h-8 w-8 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full bg-green-600 text-white grid place-items-center shadow-md sm:shadow-lg hover:bg-violet-600 active:scale-95 transition-all duration-200">
+          <div
+            className={`absolute w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] rounded-full -left-2 sm:-left-3 md:-left-4 top-1/2 -translate-y-1/2 -z-10 ${
+              theme === "dark" ? "dark:bg-gray-800" : "bg-gray-100"
+            }`}
+          />
+          <button
+            className={`h-8 w-8 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full grid place-items-center shadow-md sm:shadow-lg hover:bg-violet-600 active:scale-95 transition-all duration-200 ${
+              theme === "dark"
+                ? "bg-gray-700 text-gray-200"
+                : "bg-green-600 text-white"
+            }`}
+          >
             <FaArrowLeft className="text-sm sm:text-base md:text-lg" />
           </button>
         </div>
 
         {/* Next button */}
         <div className="swiper-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-20">
-          <div className="absolute w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] bg-white rounded-full -right-2 sm:-right-3 md:-right-4 top-1/2 -translate-y-1/2 -z-10" />
-          <button className="h-8 w-8 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full bg-green-600 text-white grid place-items-center shadow-md sm:shadow-lg hover:bg-violet-600 active:scale-95 transition-all duration-200">
+          <div
+            className={`absolute w-12 h-12 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] rounded-full -right-2 sm:-right-3 md:-right-4 top-1/2 -translate-y-1/2 -z-10 ${
+              theme === "dark" ? "dark:bg-gray-800" : "bg-gray-100"
+            }`}
+          />
+          <button
+            className={`h-8 w-8 sm:h-10 sm:w-10 md:h-11 md:w-11 rounded-full grid place-items-center shadow-md sm:shadow-lg hover:bg-violet-600 active:scale-95 transition-all duration-200 ${
+              theme === "dark"
+                ? "bg-gray-700 text-gray-200"
+                : "bg-green-600 text-white"
+            }`}
+          >
             <FaArrowRight className="text-sm sm:text-base md:text-lg" />
           </button>
         </div>
@@ -75,19 +97,48 @@ export default function Slider() {
 
                   <div className="relative z-10 max-w-7xl mx-auto px-10 lg:px-16 py-16 h-full flex items-center text-white">
                     <div className="max-w-3xl">
-                      <p className="uppercase tracking-wide text-xs md:text-sm text-white/80 mb-3">
+                      <p
+                        className={`uppercase tracking-wide text-xs md:text-sm ${
+                          theme === "dark"
+                            ? "dark:text-gray-300"
+                            : "text-white/80"
+                        } mb-3`}
+                      >
                         {s.kicker}
                       </p>
-                      <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight">
+                      <h2
+                        className={`text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight ${
+                          theme === "dark" ? "dark:text-gray-100" : "text-white"
+                        }`}
+                      >
                         {s.title}{" "}
-                        <span className="[color:transparent] [-webkit-text-stroke:1.5px_rgba(255,255,255,0.6)] block">
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "dark:[color:transparent] dark:[-webkit-text-stroke:1.5px_rgba(255,255,255,0.6)]"
+                              : "[color:transparent] [-webkit-text-stroke:1.5px_rgba(255,255,255,0.6)]"
+                          } block`}
+                        >
                           {s.outline}
                         </span>
                       </h2>
-                      <p className="mt-5 mb-8 text-white/85 max-w-2xl">
+                      <p
+                        className={`mt-5 mb-8 max-w-2xl ${
+                          theme === "dark"
+                            ? "dark:text-gray-400"
+                            : "text-white/85"
+                        }`}
+                      >
                         {s.desc}
                       </p>
-                      <a href={s.href} className="btn-primary">
+                      <a
+                        href={s.href}
+                        className={`btn-primary ${
+                          theme === "dark"
+                            ? "dark:bg-gray-700 dark:text-gray-200 hover:dark:bg-gray-600"
+                            : "bg-green-600 text-white hover:bg-green-700"
+                        }`}
+                      >
                         {s.cta}
                       </a>
                     </div>
