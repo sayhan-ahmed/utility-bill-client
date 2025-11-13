@@ -13,6 +13,7 @@ import {
   FiPhone,
 } from "react-icons/fi";
 import { FaBangladeshiTakaSign } from "react-icons/fa6";
+import { ImCross } from "react-icons/im";
 import {
   FaTimes,
   FaLock,
@@ -29,7 +30,7 @@ export default function MyPayBills() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Modal + form state
+  // Update modal + form state
   const [updateOpen, setUpdateOpen] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
   const [form, setForm] = useState({
@@ -107,6 +108,7 @@ export default function MyPayBills() {
   const handleDownload = () =>
     toast("PDF download coming soon!", { icon: "Warning" });
 
+  // For updating payments
   const openUpdateModal = (bill) => {
     const isoDate = bill?.date
       ? new Date(bill.date).toISOString().slice(0, 10)
@@ -187,6 +189,50 @@ export default function MyPayBills() {
       toast.error("Update failed");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  // Delete modal state + functions
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const openDeleteModal = (id) => {
+    setDeleteTargetId(id);
+    setDeleteOpen(true);
+  };
+
+  const cancelDelete = () => {
+    if (deleting) return;
+    setDeleteOpen(false);
+    setDeleteTargetId(null);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTargetId) return toast.error("No bill selected");
+    setDeleting(true);
+    try {
+      const res = await fetch(
+        `http://localhost:3000/payments/${deleteTargetId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "Delete failed");
+        throw new Error(txt || "Delete failed");
+      }
+      setPayments((p) =>
+        p.filter((x) => String(x._id || x.id) !== String(deleteTargetId))
+      );
+      toast.success("Deleted");
+      setDeleteOpen(false);
+      setDeleteTargetId(null);
+    } catch (err) {
+      console.error(err);
+      toast.error("Delete failed");
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -462,7 +508,7 @@ export default function MyPayBills() {
                             <FiEdit className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => handleDelete(p._id || p.id)}
+                            onClick={() => openDeleteModal(p._id || p.id)}
                             className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition"
                             title="Delete"
                           >
@@ -619,6 +665,82 @@ export default function MyPayBills() {
                   </motion.button>
                 </div>
               </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* ----- Delete Confirmation Modal ----- */}
+      <AnimatePresence>
+        {deleteOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => !deleting && cancelDelete()}
+          >
+            <motion.div
+              initial={{ y: -30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -30, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden"
+            >
+              <div className="p-5 border-b border-gray-200 flex flex-col items-start gap-4">
+                <div className="flex gap-2 items-center justify-center">
+                  <ImCross className="text-red-600" />
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Delete bill
+                  </h3>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">
+                    This action will permanently remove the selected bill. This
+                    cannot be undone.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5">
+                <div className="flex items-center justify-end gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={cancelDelete}
+                    disabled={deleting}
+                    className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-60"
+                  >
+                    Cancel
+                  </motion.button>
+
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={confirmDelete}
+                    disabled={deleting}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold disabled:opacity-60 flex items-center gap-2"
+                  >
+                    {deleting ? (
+                      <svg
+                        className="w-4 h-4 animate-spin"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    ) : null}
+                    Delete
+                  </motion.button>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         )}
