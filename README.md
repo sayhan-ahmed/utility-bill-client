@@ -1,16 +1,92 @@
-# React + Vite
+# ⚡ Utility Bill Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack MERN web application that allows users to view, manage, and pay their monthly utility bills — including Electricity, Gas, Water, and Internet.  
+Built with React (Vite), Tailwind CSS, Firebase Authentication, and Express + MongoDB on the backend.
 
-Currently, two official plugins are available:
+## 🌍 Live Links
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+| Type                 | URL                                                                                          |
+| -------------------- | -------------------------------------------------------------------------------------------- |
+| 🖥️ Client (Frontend) |                                                                                              |
+| ⚙️ Server (Backend)  | [https://utility-bill-server-eight.vercel.app](https://utility-bill-server-eight.vercel.app) |
+| 💾 Database          | MongoDB Atlas                                                                                |
 
-## React Compiler
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🔐 **User Authentication** using Firebase (Email/Password + Google Login)
+- 🧾 **View and Filter Bills** — by category, using dynamic queries from backend
+- 💳 **Pay Current Month Bills** only, with validation on bill date
+- 📋 **My Pay Bills Dashboard** — view, update, and delete your own bills
+- 📄 **PDF Report Download** — generate and export all your paid bills as a PDF using jsPDF + AutoTable
+- 🌗 **Dark/Light Theme Toggle** on Home Page
+- ⚡ **Responsive UI** built with Tailwind CSS & Framer Motion
+- 🔍 **Dynamic Routing & Protected Routes** using React Router v7
+- 💬 **Toast Notifications** for all CRUD actions (no default alerts used)
+- 🧠 **Modern Animations** using React Awesome Reveal + Framer Motion
 
-## Expanding the ESLint configuration
+## 🧩 Technologies Used
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Frontend
+
+- **React (Vite)** — fast, modern build system
+- **Tailwind CSS** — responsive, utility-first CSS
+- **Firebase Authentication** — secure login/register
+- **Framer Motion** — page transitions and animations
+- **React Hot Toast** — for success/error notifications
+- **Lucide React / React Icons** — clean modern icons
+- **Lottie React** — vector animations
+- **jsPDF & jsPDF-AutoTable** — PDF report generator
+
+### Backend
+
+- **Express.js** — RESTful API
+- **MongoDB + Atlas** — NoSQL database
+- **CORS & dotenv** — secure configuration
+- **Vercel Serverless Functions** — backend deployment
+
+## 🔐 Authentication
+
+- Users can **Register** and **Login** using Firebase Auth.
+- Supports **Google Login**.
+- After login, users can access:
+  - `/my-bills` (private route)
+  - `/bills/:id` (bill details)
+- Authenticated users stay logged in even after page reloads.
+
+## 💰 Bills Management Features
+
+### 🔹 Bills Page
+
+- Displays all bills from MongoDB (with pagination/filter).
+- Filter by category dynamically.
+- Each bill card shows: image, title, category, amount, date, and "See Details" button.
+
+### 🔹 Bill Details Page
+
+- Displays full info about a single bill.
+- “Pay Bill” button is enabled only for the current month’s bills.
+- Opens modal with prefilled form (Email, Bill ID, Amount).
+- Saves payment record in the `payments` collection.
+
+### 🔹 My Pay Bills Page
+
+- Shows only logged-in user’s payments.
+- Includes:
+  - **Update** button (opens editable modal)
+  - **Delete** button (confirmation modal)
+  - **Total bills** and **total amount** summary
+  - **Download Report** button → generates PDF for all records.
+
+## 🌙 Dark/Light Mode
+
+- Implemented with Tailwind’s `dark:` variants.
+- Toggle button (☀️ / 🌙) on Home page switches theme and saves preference in `localStorage`.
+
+## 🧠 Extra Features
+
+- 🎞️ **Lottie animations** in Home banner section.
+- ✨ **Animated sections** using Framer Motion & React Awesome Reveal.
+- 🧭 **404 Not Found Page**.
+- 🧾 **Axios interceptor** (optional improvement).
+- 🧭 **Dynamic Page Titles** for each route.
+- 🧩 **Responsive Navbar** with user avatar and dropdown.
