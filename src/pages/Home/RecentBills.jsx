@@ -1,6 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { Calendar, MapPin, Tag, ArrowRight } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Tag,
+  ArrowRight,
+  DollarSign,
+  Clock,
+  CheckCircle,
+} from "lucide-react";
 import { LuNewspaper } from "react-icons/lu";
 import AuthContext from "../../provider/AuthContext";
 
@@ -10,9 +18,17 @@ export default function RecentBills() {
 
   useEffect(() => {
     let alive = true;
-    fetch("https://utility-bill-server-eight.vercel.app/recent-bills")
+    fetch("https://utility-bill-server-eight.vercel.app/bills")
       .then((res) => res.json())
-      .then((data) => alive && setBills(Array.isArray(data) ? data : []))
+      .then((data) => {
+        if (!alive) return;
+        const fetchedBills = Array.isArray(data) ? data : [];
+        // Sort by date (newest first) and take top 8
+        const sortedBills = fetchedBills.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        setBills(sortedBills.slice(0, 8));
+      })
       .catch((e) => console.error("Recent bills error:", e))
       .finally(() => alive && setLoading(false));
     return () => {
@@ -27,16 +43,22 @@ export default function RecentBills() {
         <h2 className="text-3xl font-extrabold bg-linear-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-8">
           Recent Bills
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[...Array(3)].map((_, i) => (
+        <div className="flex flex-wrap justify-center gap-6">
+          {[...Array(8)].map((_, i) => (
             <div
               key={i}
-              className="group p-6 rounded-2xl bg-white/70 backdrop-blur-sm border border-white/20 shadow-lg animate-pulse"
+              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] group rounded-2xl bg-white shadow-md overflow-hidden animate-pulse border border-slate-100"
             >
-              <div className="h-6 w-4/5 bg-linear-to-r from-gray-200 to-gray-100 rounded-lg mb-4" />
-              <div className="h-4 w-3/5 bg-linear-to-r from-gray-200 to-gray-100 rounded mb-3" />
-              <div className="h-3 w-1/2 bg-linear-to-r from-gray-200 to-gray-100 rounded mb-2" />
-              <div className="h-3 w-2/5 bg-linear-to-r from-gray-200 to-gray-100 rounded" />
+              <div className="h-40 w-full bg-slate-200" />
+              <div className="p-5 space-y-3">
+                <div className="h-6 w-3/4 bg-slate-200 rounded mb-2" />
+                <div className="h-4 w-full bg-slate-100 rounded" />
+                <div className="h-4 w-2/3 bg-slate-100 rounded" />
+                <div className="pt-4 flex justify-between">
+                  <div className="h-4 w-16 bg-slate-200 rounded" />
+                  <div className="h-8 w-24 bg-slate-200 rounded-lg" />
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -45,8 +67,8 @@ export default function RecentBills() {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-      <div className="flex justify-between items-center">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+      <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
         <div className="relative">
           {/* dots */}
           <div className="absolute -left-6 -top-6 h-24 w-24 opacity-20 hidden sm:block">
@@ -62,22 +84,34 @@ export default function RecentBills() {
               ))}
             </svg>
           </div>
-
           <p className="section-title">
             <LuNewspaper />
             Recent Bills
           </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl mb-5 font-semibold text-[#1E2631] mt-2">
-            Pay Your <span className="text-green-700">Bills</span> Now!
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">
+            Recent <span className="text-[#009E67]">Transactions</span>
           </h2>
+          <p className="text-slate-500 mt-2 max-w-lg">
+            Track your payment history and manage your utility expenses
+            efficiently.
+          </p>
         </div>
         <Link to={"/bills"}>
-          <button className="btn-secondary">Explore All Bills</button>
+          <button className="px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl hover:border-[#009E67] hover:text-[#009E67] transition-all flex items-center gap-2">
+            Explore All Bills
+            <ArrowRight size={18} />
+          </button>
         </Link>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {bills.map((bill, idx) => (
-          <BillCard key={bill._id || bill.id || idx} bill={bill} index={idx} />
+
+      <div className="flex flex-wrap justify-center gap-6">
+        {bills.slice(0, 8).map((bill, idx) => (
+          <div
+            key={bill._id || bill.id || idx}
+            className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
+          >
+            <BillCard bill={bill} index={idx} />
+          </div>
         ))}
       </div>
     </section>
@@ -88,79 +122,120 @@ export default function RecentBills() {
 function BillCard({ bill, index }) {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const ref = useRef(null);
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setTimeout(() => setShow(true), index * 100);
-          io.unobserve(el);
-        }
-      },
-      { threshold: 0.15 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [index]);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleSeeDetails = () => {
-    if (user) {
-      navigate(`/bills/${bill._id}`);
-    } else {
-      navigate("/auth", {
-        state: { from: `/bills/${bill._id}` },
-      });
-    }
+    navigate(`/bills/${bill._id}`);
+  };
+
+  // Generate placeholder image based on category if needed
+  const getPlaceholderImage = (category) => {
+    const type = category?.toLowerCase() || "";
+    if (type.includes("electric"))
+      return "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=400";
+    if (type.includes("water"))
+      return "https://images.unsplash.com/photo-1544365558-35aa4afcf11f?auto=format&fit=crop&q=80&w=400";
+    if (type.includes("internet") || type.includes("wifi"))
+      return "https://images.unsplash.com/photo-1544197150-b99a580bbcbf?auto=format&fit=crop&q=80&w=400";
+    return "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=400";
+  };
+
+  const imageSrc = bill.image || getPlaceholderImage(bill.category);
+  const price = bill.amount ? `৳${bill.amount}` : "৳124.50"; // Mock price if missing
+  const status = bill.status || "Pending";
+  const date = bill.date
+    ? new Date(bill.date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      })
+    : "Oct 24, 2025";
+
+  const shortenMonthNames = (text) => {
+    if (!text) return "";
+    const monthMap = {
+      January: "Jan",
+      February: "Feb",
+      March: "Mar",
+      April: "Apr",
+      May: "May",
+      June: "Jun",
+      July: "Jul",
+      August: "Aug",
+      September: "Sep",
+      October: "Oct",
+      November: "Nov",
+      December: "Dec",
+    };
+    let formattedText = text;
+    Object.keys(monthMap).forEach((month) => {
+      const regex = new RegExp(month, "gi");
+      formattedText = formattedText.replace(regex, monthMap[month]);
+    });
+    return formattedText;
   };
 
   return (
     <article
-      ref={ref}
-      className={`
-        group p-6 rounded-2xl bg-white/70 backdrop-blur-md border border-white/30 shadow-xl
-        transition-all duration-700 will-change-transform hover:shadow-2xl hover:shadow-emerald-500/20
-        ${show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}
-        hover:-translate-y-2 hover:scale-[1.02] cursor-pointer
-      `}
-      style={{ transitionDelay: `${index * 50}ms` }}
+      onClick={handleSeeDetails}
+      className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Top Gradient Bar  */}
-      <div className="h-1 w-full bg-linear-to-r from-green-500 to-emerald-500 rounded-t-xl mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-      <h3 className="text-xl font-bold text-gray-800 line-clamp-2 group-hover:text-green-700 transition-colors">
-        {bill?.title}
-      </h3>
-
-      <div className="mt-4 space-y-2 text-sm">
-        <p className="flex items-center gap-2 text-gray-600">
-          <Tag className="w-4 h-4 text-green-600" />
-          <span className="font-medium">
-            {bill?.category || "Uncategorized"}
+      {/* Image Container */}
+      <div className="relative h-40 overflow-hidden bg-slate-100">
+        <img
+          src={imageSrc}
+          alt={bill.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+        <div className="absolute top-3 right-3">
+          <span
+            className={`px-3 py-1 text-xs font-bold rounded-full backdrop-blur-md ${
+              status === "Paid"
+                ? "bg-green-500/90 text-white"
+                : "bg-amber-500/90 text-white"
+            }`}
+          >
+            {status}
           </span>
-        </p>
-        <p className="flex items-center gap-2 text-gray-500">
-          <MapPin className="w-4 h-4 text-emerald-600" />
-          <span>{bill?.location || "Location not specified"}</span>
-        </p>
-        <p className="flex items-center gap-2 text-gray-500">
-          <Calendar className="w-4 h-4 text-lime-600" />
-          <span>{bill?.date || "No date"}</span>
-        </p>
+        </div>
       </div>
 
-      <button
-        onClick={handleSeeDetails}
-        className={`
-          mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-green-600 to-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:from-green-700 hover:to-emerald-700 hover:shadow-lg hover:shadow-emerald-500/30
-          transform transition-all duration-300 active:scale-95`}
-      >
-        See Details
-        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-      </button>
+      {/* Content */}
+      <div className="p-5 flex flex-col grow">
+        <div className="flex items-start justify-between mb-2">
+          <span className="text-xs font-bold px-2 py-1 bg-slate-100 text-slate-600 rounded uppercase tracking-wide">
+            {bill.category || "Utility"}
+          </span>
+          <div className="flex items-center text-slate-400 text-xs">
+            <Clock size={12} className="mr-1" />
+            {date}
+          </div>
+        </div>
+
+        <h3 className="text-lg font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-[#009E67] transition-colors">
+          {shortenMonthNames(bill.title)}
+        </h3>
+
+        <div className="space-y-2 mb-4 grow">
+          <div className="flex items-center text-slate-500 text-sm">
+            <MapPin size={14} className="mr-2 text-[#009E67]" />
+            <span className="truncate">{bill.location || "Location N/A"}</span>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+          <div className="flex flex-col">
+            <span className="text-xs text-slate-400 font-medium">Amount</span>
+            <span className="text-xl font-black text-[#009E67]">{price}</span>
+          </div>
+          <div className="px-4 py-2 bg-slate-50 text-slate-700 text-sm font-bold rounded-lg group-hover:bg-[#009E67] group-hover:text-white transition-colors">
+            View Details
+          </div>
+        </div>
+      </div>
     </article>
   );
 }

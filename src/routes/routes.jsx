@@ -39,11 +39,9 @@ const router = createBrowserRouter([
       {
         path: "bills/:id",
         element: (
-          <PrivateRoute>
-            <RouteTitle title="Bill Details">
-              <BillDetails />
-            </RouteTitle>
-          </PrivateRoute>
+          <RouteTitle title="Bill Details">
+            <BillDetails />
+          </RouteTitle>
         ),
       },
       {
