@@ -6,6 +6,7 @@ import Service from "./Service";
 import RecentBills from "./RecentBills";
 import Features from "./Features";
 import Testimonials from "./Testimonials";
+import FAQ from "./FAQ";
 import { FiMoon, FiSun } from "react-icons/fi";
 
 const Home = () => {
@@ -62,6 +63,7 @@ const Home = () => {
       <NewsSection theme={theme} />
       <Category theme={theme} />
       <Testimonials />
+      <FAQ />
       <div id="contact">
         <Service theme={theme} />
       </div>

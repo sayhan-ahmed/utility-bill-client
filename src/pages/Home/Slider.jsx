@@ -90,7 +90,7 @@ export default function Slider() {
   };
 
   return (
-    <section className="relative bg-linear-to-br from-slate-50 via-white to-emerald-50/20 py-8 md:py-12 lg:py-16">
+    <section className="relative bg-linear-to-br from-slate-50 via-white to-emerald-50/20 pt-6 pb-16 md:pt-8 lg:pt-10">
       {/* Subtle Grid */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div
@@ -118,172 +118,221 @@ export default function Slider() {
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
-            <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
-              <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-                {/* LEFT - Image & Cards */}
-                <div className="lg:col-span-5 order-2 lg:order-1 space-y-6">
-                  {/* Main Image */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -40 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="relative"
-                  >
-                    <div className="relative bg-white rounded-3xl overflow-hidden">
-                      <img src={slide.img} alt="" className="w-full h-auto" />
+            {({ isActive }) => (
+              <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
+                <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+                  {/* LEFT - Image & Cards */}
+                  <div className="lg:col-span-5 order-2 lg:order-1 space-y-6">
+                    {/* Main Image */}
+                    <div className="relative">
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={
+                          isActive
+                            ? { opacity: 1, scale: 1 }
+                            : { opacity: 0, scale: 0.9 }
+                        }
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="relative bg-white rounded-3xl overflow-hidden"
+                      >
+                        <motion.img
+                          src={slide.img}
+                          alt=""
+                          initial={{ scale: 1 }}
+                          animate={isActive ? { scale: 1.15 } : { scale: 1 }}
+                          transition={{
+                            duration: 10,
+                            ease: "linear",
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                          }}
+                          className="w-full h-auto object-cover min-h-[250px]"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent pointer-events-none" />
+                      </motion.div>
                     </div>
-                  </motion.div>
 
-                  {/* Bill Type Cards */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="grid grid-cols-3 gap-3"
-                  >
-                    {slide.billTypes.map((bill, idx) => {
-                      const Icon = bill.icon;
-                      return (
-                        <div
-                          key={idx}
-                          className="bg-white rounded-xl p-4 shadow-lg border border-slate-200/50 hover:shadow-xl hover:scale-105 transition-all cursor-pointer group min-h-[100px] flex flex-col"
-                        >
-                          <div
-                            className={`w-10 h-10 rounded-lg ${bill.color} flex items-center justify-center mb-2 group-hover:scale-110 transition-transform`}
+                    {/* Bill Type Cards */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={
+                        isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                      }
+                      transition={{ duration: 0.6, delay: 0.4 }}
+                      className="grid grid-cols-3 gap-3"
+                    >
+                      {slide.billTypes.map((bill, idx) => {
+                        const Icon = bill.icon;
+                        return (
+                          <motion.div
+                            key={idx}
+                            whileHover={{ y: -5, scale: 1.05 }}
+                            className="bg-white rounded-xl p-4 shadow-lg border border-slate-200/50 transition-all cursor-pointer group min-h-[100px] flex flex-col"
                           >
-                            <Icon size={20} />
-                          </div>
-                          <p className="text-xs font-bold text-slate-700">
-                            {bill.name}
+                            <div
+                              className={`w-10 h-10 rounded-lg ${bill.color} flex items-center justify-center mb-2 group-hover:bg-[#009E67] group-hover:text-white transition-colors`}
+                            >
+                              <Icon size={20} />
+                            </div>
+                            <p className="text-xs font-bold text-slate-700">
+                              {bill.name}
+                            </p>
+                          </motion.div>
+                        );
+                      })}
+                    </motion.div>
+
+                    {/* Active Bills Card */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={
+                        isActive ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }
+                      }
+                      transition={{ duration: 0.6, delay: 0.6 }}
+                      className="bg-linear-to-br from-[#009E67] to-emerald-600 rounded-2xl p-5 text-white shadow-xl"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <p className="text-sm font-semibold opacity-90 mb-1">
+                            Active Bills
+                          </p>
+                          <p className="text-3xl font-black">12</p>
+                        </div>
+                        <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                          <TrendingUp size={20} />
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="px-3 py-1 bg-white/20 rounded-full backdrop-blur-sm">
+                          <span className="font-bold">3 Due Soon</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+
+                  {/* RIGHT - Content */}
+                  <div className="lg:col-span-7 order-1 lg:order-2 space-y-6">
+                    {/* Badge */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={
+                        isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                      }
+                      transition={{ duration: 0.5, delay: 0.1 }}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full"
+                    >
+                      <div className="w-2 h-2 bg-[#009E67] rounded-full animate-pulse" />
+                      <span className="text-xs font-bold text-[#009E67] uppercase tracking-wider">
+                        {slide.badge}
+                      </span>
+                    </motion.div>
+
+                    {/* Title */}
+                    <div className="overflow-hidden">
+                      <motion.h1
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={
+                          isActive
+                            ? { opacity: 1, y: 0 }
+                            : { opacity: 0, y: 50 }
+                        }
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 leading-none mb-2"
+                      >
+                        {slide.title}
+                      </motion.h1>
+                      <motion.h2
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={
+                          isActive
+                            ? { opacity: 1, y: 0 }
+                            : { opacity: 0, y: 50 }
+                        }
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                        className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black bg-linear-to-r from-[#009E67] to-emerald-500 bg-clip-text text-transparent leading-none"
+                      >
+                        {slide.subtitle}
+                      </motion.h2>
+                    </div>
+
+                    {/* Description */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={isActive ? { opacity: 1 } : { opacity: 0 }}
+                      transition={{ duration: 0.8, delay: 0.5 }}
+                      className="space-y-3"
+                    >
+                      <p className="text-lg md:text-xl font-bold text-slate-700">
+                        {slide.description}
+                      </p>
+                      <p className="text-sm md:text-base text-slate-600 max-w-xl">
+                        {slide.longDesc}
+                      </p>
+                    </motion.div>
+
+                    {/* Stats Row */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={
+                        isActive
+                          ? { opacity: 1, scale: 1 }
+                          : { opacity: 0, scale: 0.9 }
+                      }
+                      transition={{ duration: 0.6, delay: 0.7 }}
+                      className="grid grid-cols-2 gap-4"
+                    >
+                      <div className="bg-white rounded-xl p-5 shadow-lg border border-slate-200/50 min-h-[120px] flex flex-col justify-between hover:border-[#009E67] transition-colors">
+                        <TrendingUp size={24} className="text-[#009E67] mb-2" />
+                        <div>
+                          <p className="text-3xl font-black text-slate-900">
+                            {slide.stat}
+                          </p>
+                          <p className="text-sm font-semibold text-slate-600">
+                            {slide.statLabel}
                           </p>
                         </div>
-                      );
-                    })}
-                  </motion.div>
-
-                  {/* Active Bills Card */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                    className="bg-linear-to-br from-[#009E67] to-emerald-600 rounded-2xl p-5 text-white"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <div>
-                        <p className="text-sm font-semibold opacity-90 mb-1">
-                          Active Bills
-                        </p>
-                        <p className="text-3xl font-black">12</p>
                       </div>
-                      <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                        <TrendingUp size={20} />
+                      <div className="bg-linear-to-br from-[#009E67] to-emerald-600 rounded-xl p-5 shadow-lg text-white min-h-[120px] flex flex-col justify-between">
+                        <Users size={24} className="mb-2" />
+                        <div>
+                          <p className="text-3xl font-black">2M+</p>
+                          <p className="text-sm font-semibold opacity-90">
+                            Verified Users
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <div className="px-3 py-1 bg-white/20 rounded-full backdrop-blur-sm">
-                        <span className="font-bold">3 Due Soon</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                </div>
+                    </motion.div>
 
-                {/* RIGHT - Content */}
-                <div className="lg:col-span-7 order-1 lg:order-2 space-y-5">
-                  {/* Badge */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full"
-                  >
-                    <div className="w-2 h-2 bg-[#009E67] rounded-full animate-pulse" />
-                    <span className="text-xs font-bold text-[#009E67] uppercase tracking-wider">
-                      {slide.badge}
-                    </span>
-                  </motion.div>
-
-                  {/* Title */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                  >
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 leading-none mb-2">
-                      {slide.title}
-                    </h1>
-                    <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black bg-linear-to-r from-[#009E67] to-emerald-500 bg-clip-text text-transparent leading-none">
-                      {slide.subtitle}
-                    </h2>
-                  </motion.div>
-
-                  {/* Description */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="space-y-2"
-                  >
-                    <p className="text-lg md:text-xl font-semibold text-slate-700">
-                      {slide.description}
-                    </p>
-                    <p className="text-sm md:text-base text-slate-600">
-                      {slide.longDesc}
-                    </p>
-                  </motion.div>
-
-                  {/* Stats Row */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                    className="grid grid-cols-2 gap-4"
-                  >
-                    <div className="bg-white rounded-xl p-5 shadow-lg border border-slate-200/50 min-h-[140px] flex flex-col justify-between">
-                      <TrendingUp size={24} className="text-[#009E67] mb-2" />
-                      <div>
-                        <p className="text-3xl font-black text-slate-900">
-                          {slide.stat}
-                        </p>
-                        <p className="text-sm font-semibold text-slate-600">
-                          {slide.statLabel}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="bg-linear-to-br from-[#009E67] to-emerald-600 rounded-xl p-5 shadow-lg text-white min-h-[140px] flex flex-col justify-between">
-                      <Users size={24} className="mb-2" />
-                      <div>
-                        <p className="text-3xl font-black">2M+</p>
-                        <p className="text-sm font-semibold opacity-90">
-                          Verified Users
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* CTAs */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                    className="flex flex-wrap gap-4"
-                  >
-                    <a
-                      href="/bills"
-                      className="px-6 py-3 md:px-8 md:py-4 bg-linear-to-r from-[#009E67] to-emerald-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2 text-sm md:text-base"
+                    {/* CTAs */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={
+                        isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                      }
+                      transition={{ duration: 0.6, delay: 0.9 }}
+                      className="flex flex-wrap gap-4"
                     >
-                      View Dashboard
-                      <ArrowRight size={20} />
-                    </a>
-                    <a
-                      href="/bills"
-                      className="px-6 py-3 md:px-8 md:py-4 bg-white border-2 border-slate-200 text-slate-900 font-bold rounded-xl hover:border-[#009E67] hover:text-[#009E67] hover:scale-105 transition-all text-sm md:text-base"
-                    >
-                      Manage Bills
-                    </a>
-                  </motion.div>
+                      <a
+                        href="/bills"
+                        className="px-6 py-3 md:px-8 md:py-4 bg-linear-to-r from-[#009E67] to-emerald-600 text-white font-bold rounded-xl shadow-lg hover:shadow-emerald-200 hover:scale-105 transition-all flex items-center gap-2 text-sm md:text-base group"
+                      >
+                        View Dashboard
+                        <ArrowRight
+                          size={20}
+                          className="group-hover:translate-x-1 transition-transform"
+                        />
+                      </a>
+                      <a
+                        href="/bills"
+                        className="px-6 py-3 md:px-8 md:py-4 bg-white border-2 border-slate-200 text-slate-900 font-bold rounded-xl hover:border-[#009E67] hover:text-[#009E67] hover:scale-105 transition-all text-sm md:text-base shadow-sm"
+                      >
+                        Manage Bills
+                      </a>
+                    </motion.div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </SwiperSlide>
         ))}
       </Swiper>
