@@ -29,7 +29,7 @@ const Home = () => {
 
   return (
     <div
-      className={`min-h-screen ${
+      className={`min-h-screen scroll-smooth ${
         theme === "dark" ? "dark bg-gray-900" : "bg-gray-100"
       }`}
     >
