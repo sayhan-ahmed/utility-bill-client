@@ -64,16 +64,13 @@ const Navbar = () => {
   const navLinks = [
     { to: "/", label: "Home", icon: HomeIcon },
     { to: "/bills", label: "Manage Bills", icon: CreditCard },
+    { to: "/contact", label: "Contact", icon: Mail },
     ...(user?.email
       ? [
           { to: "/my-bills", label: "Payments", icon: History },
           { to: "/#statistics", label: "Stats", icon: BarChart3 },
-          { to: "/contact", label: "Contact", icon: Mail },
         ]
-      : [
-          { to: "/login", label: "Login" },
-          { to: "/register", label: "Register" },
-        ]),
+      : []),
   ];
 
   const closeMenu = () => setOpen(false);

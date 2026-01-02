@@ -4,6 +4,8 @@ import Slider from "./Slider";
 import NewsSection from "./NewsSection";
 import Service from "./Service";
 import RecentBills from "./RecentBills";
+import Features from "./Features";
+import Testimonials from "./Testimonials";
 import { FiMoon, FiSun } from "react-icons/fi";
 
 const Home = () => {
@@ -53,11 +55,13 @@ const Home = () => {
 
       {/* Main Content */}
       <Slider theme={theme} />
+      <Features />
       <div id="statistics">
         <RecentBills theme={theme} />
       </div>
       <NewsSection theme={theme} />
       <Category theme={theme} />
+      <Testimonials />
       <div id="contact">
         <Service theme={theme} />
       </div>
