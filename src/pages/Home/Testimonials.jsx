@@ -29,6 +29,30 @@ const testimonials = [
   },
 ];
 
+const cardVariants = {
+  hidden: {
+    opacity: 0,
+    y: 50,
+    scale: 0.9,
+    rotateX: -15,
+    filter: "blur(10px)",
+  },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    rotateX: 0,
+    filter: "blur(0px)",
+    transition: {
+      delay: i * 0.1,
+      type: "spring",
+      stiffness: 100,
+      damping: 15,
+      mass: 0.8,
+    },
+  }),
+};
+
 const Testimonials = () => {
   return (
     <section className="py-24 bg-slate-50 overflow-hidden">
@@ -67,16 +91,24 @@ const Testimonials = () => {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          style={{ perspective: "1500px" }}
+        >
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -10 }}
-              className="bg-white p-8 rounded-4xl border border-slate-100 shadow-sm relative group transition-all duration-500 hover:shadow-2xl hover:shadow-slate-200/50"
+              custom={index}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              whileHover={{
+                y: -12,
+                scale: 1.02,
+                rotateY: index === 0 ? 5 : index === 2 ? -5 : 0,
+              }}
+              className="bg-white p-8 rounded-4xl border border-slate-100 shadow-sm relative group transition-all duration-500 hover:shadow-2xl hover:shadow-[#009E67]/10"
             >
               <div className="absolute top-0 right-8 -translate-y-1/2 p-3 bg-[#009E67] rounded-2xl text-white shadow-lg shadow-green-200 rotate-0 group-hover:rotate-12 transition-transform duration-500">
                 <Quote size={24} />

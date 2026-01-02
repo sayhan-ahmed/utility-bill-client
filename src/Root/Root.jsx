@@ -9,6 +9,7 @@ export default function Root() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setLoading(true);
     const t = setTimeout(() => setLoading(false), 300);
     return () => clearTimeout(t);

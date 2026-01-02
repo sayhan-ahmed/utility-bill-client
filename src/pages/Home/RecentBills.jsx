@@ -10,7 +10,35 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { LuNewspaper } from "react-icons/lu";
+import { motion } from "framer-motion";
 import AuthContext from "../../provider/AuthContext";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 40, scale: 0.95, rotateX: -10, filter: "blur(8px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    rotateX: 0,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      stiffness: 80,
+      damping: 20,
+      mass: 1,
+    },
+  },
+};
 
 export default function RecentBills() {
   const [bills, setBills] = useState([]);
@@ -68,8 +96,14 @@ export default function RecentBills() {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-      <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
-        <div className="relative">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={containerVariants}
+        className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4"
+      >
+        <motion.div variants={itemVariants} className="relative">
           {/* dots */}
           <div className="absolute -left-6 -top-6 h-24 w-24 opacity-20 hidden sm:block">
             <svg viewBox="0 0 100 100" className="h-full w-full">
@@ -95,25 +129,38 @@ export default function RecentBills() {
             Track your payment history and manage your utility expenses
             efficiently.
           </p>
-        </div>
-        <Link to={"/bills"}>
-          <button className="px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl hover:border-[#009E67] hover:text-[#009E67] transition-all flex items-center gap-2">
-            Explore All Bills
-            <ArrowRight size={18} />
-          </button>
-        </Link>
-      </div>
+        </motion.div>
+        <motion.div variants={itemVariants}>
+          <Link to={"/bills"}>
+            <button className="px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl hover:border-[#009E67] hover:text-[#009E67] transition-all flex items-center gap-2 group">
+              Explore All Bills
+              <ArrowRight
+                size={18}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </button>
+          </Link>
+        </motion.div>
+      </motion.div>
 
-      <div className="flex flex-wrap justify-center gap-6">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={containerVariants}
+        style={{ perspective: "1200px" }}
+        className="flex flex-wrap justify-center gap-6"
+      >
         {bills.slice(0, 8).map((bill, idx) => (
-          <div
+          <motion.div
             key={bill._id || bill.id || idx}
+            variants={itemVariants}
             className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
           >
             <BillCard bill={bill} index={idx} />
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }
@@ -176,9 +223,11 @@ function BillCard({ bill, index }) {
   };
 
   return (
-    <article
+    <motion.article
       onClick={handleSeeDetails}
-      className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full cursor-pointer"
+      whileHover={{ y: -10, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-[#009E67]/10 transition-shadow duration-500 flex flex-col h-full cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -236,6 +285,6 @@ function BillCard({ bill, index }) {
           </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
