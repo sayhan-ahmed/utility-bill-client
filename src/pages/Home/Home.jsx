@@ -53,10 +53,14 @@ const Home = () => {
 
       {/* Main Content */}
       <Slider theme={theme} />
-      <RecentBills theme={theme} />
+      <div id="statistics">
+        <RecentBills theme={theme} />
+      </div>
       <NewsSection theme={theme} />
       <Category theme={theme} />
-      <Service theme={theme} />
+      <div id="contact">
+        <Service theme={theme} />
+      </div>
     </div>
   );
 };

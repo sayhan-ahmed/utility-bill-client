@@ -20,7 +20,7 @@ export default function Root() {
       <header>
         <Navbar />
       </header>
-      <main className="flex-1">
+      <main className="flex-1 pt-18 md:pt-20">
         <Outlet />
       </main>
       <footer>
