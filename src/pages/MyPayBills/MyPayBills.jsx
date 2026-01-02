@@ -25,6 +25,10 @@ import {
 } from "react-icons/fa";
 import DownloadReport from "./DownloadReport";
 
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://utility-bill-server-eight.vercel.app";
+
 export default function MyPayBills() {
   const { user, loading: authLoading } = useContext(AuthContext);
   const [payments, setPayments] = useState([]);
@@ -49,9 +53,7 @@ export default function MyPayBills() {
       return;
     }
     setLoading(true);
-    fetch(
-      `https://utility-bill-server-eight.vercel.app/payments?email=${user.email}`
-    )
+    fetch(`${API_URL}/payments?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => setPayments(data))
       .catch((err) => {
@@ -154,9 +156,7 @@ export default function MyPayBills() {
 
     try {
       const res = await fetch(
-        `https://utility-bill-server-eight.vercel.app/payments/${
-          selectedBill._id || selectedBill.id
-        }`,
+        `${API_URL}/payments/${selectedBill._id || selectedBill.id}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -213,12 +213,9 @@ export default function MyPayBills() {
     if (!deleteTargetId) return toast.error("No bill selected");
     setDeleting(true);
     try {
-      const res = await fetch(
-        `https://utility-bill-server-eight.vercel.app/payments/${deleteTargetId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const res = await fetch(`${API_URL}/payments/${deleteTargetId}`, {
+        method: "DELETE",
+      });
       if (!res.ok) {
         const txt = await res.text().catch(() => "Delete failed");
         throw new Error(txt || "Delete failed");

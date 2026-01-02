@@ -36,6 +36,10 @@ const formVariants = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.5, delay: 0.2 } },
 };
 
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://utility-bill-server-eight.vercel.app";
+
 // Main component
 export default function Bills() {
   const navigate = useNavigate();
@@ -58,7 +62,7 @@ export default function Bills() {
   });
 
   useEffect(() => {
-    fetch("https://utility-bill-server-eight.vercel.app/bills")
+    fetch(`${API_URL}/bills`)
       .then((res) => res.json())
       .then((data) => {
         const uniqueCategories = [
@@ -72,7 +76,7 @@ export default function Bills() {
 
   useEffect(() => {
     setLoading(true);
-    const url = "https://utility-bill-server-eight.vercel.app/bills";
+    const url = `${API_URL}/bills`;
     const query =
       selectedCategory !== "all" ? `?category=${selectedCategory}` : "";
 
@@ -111,7 +115,7 @@ export default function Bills() {
         newBillForm.category.slice(1),
     };
 
-    fetch("https://utility-bill-server-eight.vercel.app/bills", {
+    fetch(`${API_URL}/bills`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(billData),
@@ -122,7 +126,7 @@ export default function Bills() {
           toast.success("Bill added successfully!");
 
           setLoading(true);
-          const url = "https://utility-bill-server-eight.vercel.app/bills";
+          const url = `${API_URL}/bills`;
           const query =
             selectedCategory !== "all" ? `?category=${selectedCategory}` : "";
 

@@ -6,6 +6,9 @@ import AuthContext from "../../provider/AuthContext";
 import { FcGoogle } from "react-icons/fc";
 
 const BG_URL = "https://i.postimg.cc/wxsx4mn1/download-5.jpg";
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://utility-bill-server-eight.vercel.app";
 
 const Login = () => {
   const { logIn, googleSignIn, setUser } = useContext(AuthContext);
@@ -51,7 +54,7 @@ const Login = () => {
             email: user.email,
             image: user.photoURL,
           };
-          fetch("https://utility-bill-server-eight.vercel.app/users", {
+          fetch(`${API_URL}/users`, {
             method: "POST",
             headers: {
               "content-type": "application/json",

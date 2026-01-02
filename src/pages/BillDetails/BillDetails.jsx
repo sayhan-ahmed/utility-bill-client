@@ -23,7 +23,9 @@ import { FaBangladeshiTakaSign } from "react-icons/fa6";
 import Lottie from "lottie-react";
 import emptyAnimation from "../../assets/lottie/empty-animation.json";
 
-const API_BASE = "https://utility-bill-server-eight.vercel.app";
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  "https://utility-bill-server-eight.vercel.app";
 
 export default function BillDetails() {
   const { id } = useParams();

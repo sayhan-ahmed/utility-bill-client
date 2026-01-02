@@ -2,14 +2,17 @@ import React, { useContext, useState } from "react";
 import { FiEye, FiEyeOff, FiMail, FiUser } from "react-icons/fi";
 import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
-import { updateProfile } from "firebase/auth";
 import AuthContext from "../../provider/AuthContext";
 import { FcGoogle } from "react-icons/fc";
 
 const BG_URL = "https://i.postimg.cc/hPWm2gyp/pexels-photo-13845237.jpg";
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://utility-bill-server-eight.vercel.app";
 
 const Register = () => {
-  const { createUser, setUser, googleSignIn } = useContext(AuthContext);
+  const { createUser, setUser, googleSignIn, updateUserProfile } =
+    useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [passwordError, setPasswordError] = useState("");
@@ -47,16 +50,26 @@ const Register = () => {
     toast
       .promise(
         createUser(email, password)
-          .then((result) => {
+          .then(async (result) => {
             const user = result.user;
-            form.reset();
-            return updateProfile(user, {
-              displayName: name,
-              photoURL: photo,
-            }).then(() => {
-              setUser({ ...user, displayName: name, photoURL: photo });
-              return true;
+            await updateUserProfile(name, photo);
+            setUser({ ...user, displayName: name, photoURL: photo });
+
+            const newUser = {
+              user: name,
+              email: email,
+              image: photo,
+            };
+
+            // Sync with DB
+            await fetch(`${API_URL}/users`, {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify(newUser),
             });
+
+            form.reset();
+            return true;
           })
           .catch((error) => {
             throw new Error(`Failed to register.\nReason: ${error.code}`);
@@ -85,7 +98,7 @@ const Register = () => {
             image: result.user.photoURL,
           };
           // Create user in the database
-          fetch("https://utility-bill-server-eight.vercel.app/users", {
+          fetch(`${API_URL}/users`, {
             method: "POST",
             headers: {
               "content-type": "application/json",
