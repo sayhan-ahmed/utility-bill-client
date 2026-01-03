@@ -39,7 +39,7 @@ const Auth = () => {
           Login Required
         </h2>
         <p className="text-gray-600 mb-8 text-sm md:text-base">
-          You need to log in to view bill details.
+          You need to log in first.
         </p>
         {/* buttons */}
         <div className="space-y-3">

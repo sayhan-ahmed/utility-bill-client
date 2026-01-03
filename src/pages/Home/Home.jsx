@@ -7,6 +7,7 @@ import RecentBills from "./RecentBills";
 import Features from "./Features";
 import Testimonials from "./Testimonials";
 import FAQ from "./FAQ";
+import SmartAudit from "./SmartAudit";
 import { FiMoon, FiSun } from "react-icons/fi";
 
 const Home = () => {
@@ -57,6 +58,7 @@ const Home = () => {
       {/* Main Content */}
       <Slider theme={theme} />
       <Features />
+      <SmartAudit />
       <div id="statistics">
         <RecentBills theme={theme} />
       </div>

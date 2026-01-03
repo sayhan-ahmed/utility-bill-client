@@ -36,7 +36,6 @@ const SmartInsights = () => {
             <div className="mt-8 space-y-8">
               {/* item 1 */}
               <article className="border-b pb-8">
-                <p className="text-sm text-gray-500 mb-2">03 Jan, 2025</p>
                 <h3 className="text-xl font-semibold text-[#1E2631] leading-snug flex">
                   <span className="w-1 bg-orange-500 rounded mr-3" />
                   Optimizing Peak Hour Consumption
@@ -50,7 +49,6 @@ const SmartInsights = () => {
 
               {/* item 2 */}
               <article>
-                <p className="text-sm text-gray-500 mb-2">29 Dec, 2024</p>
                 <h3 className="text-xl font-semibold text-[#1E2631] leading-snug flex">
                   <span className="w-1 bg-orange-500 rounded mr-3" />
                   Consolidated Statement Management
@@ -77,7 +75,7 @@ const SmartInsights = () => {
               </div>
 
               <div className="mt-4">
-                <p className="text-sm text-gray-500">22 Dec, 2024</p>
+                <p className="text-sm text-gray-500">22 Dec, 2025</p>
                 <h3 className="text-2xl font-semibold text-[#1E2631] leading-tight mt-1">
                   Integrating Smart Controls into Modern Kitchens
                 </h3>
@@ -100,7 +98,7 @@ const SmartInsights = () => {
               </div>
 
               <div className="mt-4">
-                <p className="text-sm text-gray-500">18 Dec, 2024</p>
+                <p className="text-sm text-gray-500">18 Dec, 2025</p>
                 <h3 className="text-2xl font-semibold text-[#1E2631] leading-tight mt-1">
                   The ROI of Energy-Efficient Household Lighting
                 </h3>
