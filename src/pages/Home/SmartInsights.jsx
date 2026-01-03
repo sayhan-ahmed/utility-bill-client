@@ -1,7 +1,7 @@
 import React from "react";
-import { LuNewspaper } from "react-icons/lu";
+import { LuLightbulb } from "react-icons/lu";
 
-const NewsSection = () => {
+const SmartInsights = () => {
   return (
     <div>
       <section className="py-12 md:py-16">
@@ -25,38 +25,40 @@ const NewsSection = () => {
               </div>
 
               <p className="section-title">
-                <LuNewspaper />
-                Latest News
+                <LuLightbulb />
+                Smart Insights
               </p>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-[#1E2631] mt-2">
-                News & <span className="text-green-700">Update</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1E2631] mt-2">
+                Expert <span className="text-green-700">Pro-Tips</span>
               </h2>
             </div>
 
             <div className="mt-8 space-y-8">
               {/* item 1 */}
               <article className="border-b pb-8">
-                <p className="text-sm text-gray-500 mb-2">23 Nov, 2024</p>
+                <p className="text-sm text-gray-500 mb-2">03 Jan, 2025</p>
                 <h3 className="text-xl font-semibold text-[#1E2631] leading-snug flex">
                   <span className="w-1 bg-orange-500 rounded mr-3" />
-                  Outdoor Meter Reading Goes Smart
+                  Optimizing Peak Hour Consumption
                 </h3>
                 <p className="text-gray-600 mt-3">
-                  We’re rolling out smart meter sync for electricity & gas, so
-                  your bills auto-update without manual input…
+                  Major providers now offer dynamic pricing. Shifting heavy
+                  usage tasks to off-peak slots can reduce your grid-related
+                  costs by over 20% on monthly statements.
                 </p>
               </article>
 
               {/* item 2 */}
               <article>
-                <p className="text-sm text-gray-500 mb-2">14 Nov, 2024</p>
+                <p className="text-sm text-gray-500 mb-2">29 Dec, 2024</p>
                 <h3 className="text-xl font-semibold text-[#1E2631] leading-snug flex">
                   <span className="w-1 bg-orange-500 rounded mr-3" />
-                  New Due-Date Alerts & Grace Period Window
+                  Consolidated Statement Management
                 </h3>
                 <p className="text-gray-600 mt-3">
-                  Enable reminders and set a grace period to avoid late fees.
-                  Configure it in Settings → Notifications…
+                  Managing multiple service points is easier than ever. Link all
+                  your properties to a single profile to get one unified
+                  overview of your total utility footprint.
                 </p>
               </article>
             </div>
@@ -75,20 +77,15 @@ const NewsSection = () => {
               </div>
 
               <div className="mt-4">
-                <p className="text-sm text-gray-500">14 Nov, 2024</p>
+                <p className="text-sm text-gray-500">22 Dec, 2024</p>
                 <h3 className="text-2xl font-semibold text-[#1E2631] leading-tight mt-1">
-                  How to Get Electricity to a Kitchen Island
+                  Integrating Smart Controls into Modern Kitchens
                 </h3>
                 <p className="text-gray-600 mt-2">
-                  Electricity is arguably the most valuable resource we have in
-                  our modern society. Without proper routing and safety…
+                  Kitchens represent the highest energy-density zones in a home.
+                  Proper circuit monitoring ensures safety while identifying
+                  phantom loads that drain your wallet.
                 </p>
-                <a
-                  href="#"
-                  className="inline-block mt-3 text-green-700 font-medium transition hover:translate-x-1"
-                >
-                  Read More
-                </a>
               </div>
             </article>
 
@@ -103,20 +100,15 @@ const NewsSection = () => {
               </div>
 
               <div className="mt-4">
-                <p className="text-sm text-gray-500">09 Nov, 2024</p>
+                <p className="text-sm text-gray-500">18 Dec, 2024</p>
                 <h3 className="text-2xl font-semibold text-[#1E2631] leading-tight mt-1">
-                  Landscape Lighting that Boosts Home Value
+                  The ROI of Energy-Efficient Household Lighting
                 </h3>
                 <p className="text-gray-600 mt-2">
-                  Plan circuits, pick energy-efficient fixtures, and use timers
-                  to keep utility costs low while improving curb appeal…
+                  Transitioning to balanced LED setups reduces heat waste and
+                  lowers lighting expenditure. A well-planned grid increases
+                  both safety and property valuation.
                 </p>
-                <a
-                  href="#"
-                  className="inline-block mt-3 text-green-700 font-medium transition hover:translate-x-1"
-                >
-                  Read More
-                </a>
               </div>
             </article>
           </div>
@@ -126,4 +118,4 @@ const NewsSection = () => {
   );
 };
 
-export default NewsSection;
+export default SmartInsights;

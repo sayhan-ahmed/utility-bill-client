@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Category from "./Category";
 import Slider from "./Slider";
-import NewsSection from "./NewsSection";
+import SmartInsights from "./SmartInsights";
 import Service from "./Service";
 import RecentBills from "./RecentBills";
 import Features from "./Features";
@@ -60,7 +60,7 @@ const Home = () => {
       <div id="statistics">
         <RecentBills theme={theme} />
       </div>
-      <NewsSection theme={theme} />
+      <SmartInsights theme={theme} />
       <Category theme={theme} />
       <Testimonials />
       <FAQ />
