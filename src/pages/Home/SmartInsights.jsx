@@ -1,13 +1,47 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { LuLightbulb } from "react-icons/lu";
 
 const SmartInsights = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const leftVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  const rightVariants = {
+    hidden: { opacity: 0, x: 50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
   return (
-    <div>
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={containerVariants}
+    >
       <section className="py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* -----Left Side----- */}
-          <div className="lg:col-span-5">
+          <motion.div variants={leftVariants} className="lg:col-span-5">
             <div className="relative">
               {/* dots */}
               <div className="absolute -left-6 -top-6 h-24 w-24 opacity-20 hidden sm:block">
@@ -60,12 +94,12 @@ const SmartInsights = () => {
                 </p>
               </article>
             </div>
-          </div>
+          </motion.div>
 
           {/* -----Right Side----- */}
           <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* card 1 */}
-            <article className="group">
+            <motion.article variants={rightVariants} className="group">
               <div className="overflow-hidden rounded-xl">
                 <img
                   src="https://images.pexels.com/photos/6153354/pexels-photo-6153354.jpeg"
@@ -85,10 +119,10 @@ const SmartInsights = () => {
                   phantom loads that drain your wallet.
                 </p>
               </div>
-            </article>
+            </motion.article>
 
             {/* card 2 */}
-            <article className="group">
+            <motion.article variants={rightVariants} className="group">
               <div className="overflow-hidden rounded-xl">
                 <img
                   src="https://images.pexels.com/photos/1090638/pexels-photo-1090638.jpeg"
@@ -108,11 +142,11 @@ const SmartInsights = () => {
                   both safety and property valuation.
                 </p>
               </div>
-            </article>
+            </motion.article>
           </div>
         </div>
       </section>
-    </div>
+    </motion.div>
   );
 };
 

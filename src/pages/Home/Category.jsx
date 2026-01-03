@@ -1,17 +1,50 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa";
 import { FaFireFlameCurved } from "react-icons/fa6";
-import { FiArrowRight, FiDroplet, FiPlus, FiWifi, FiZap } from "react-icons/fi";
+import { FiDroplet, FiPlus, FiWifi, FiZap } from "react-icons/fi";
 import { IoBulbOutline } from "react-icons/io5";
 
 const Category = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { type: "spring", stiffness: 120, damping: 12 },
+    },
+  };
+
   return (
     <div className="bg-linear-to-br from-purple-100/70 via-yellow-50 to-red-50">
       <section className="py-12 md:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+          className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-10"
+        >
           {/* -----Left Side----- */}
-          <div className="lg:col-span-5">
-            <div className="rounded-[28px] p-8 md:p-10 bg-linear-to-br from-green-100/70 via-green-50 to-transparent shadow-lg">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: -30 },
+              visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
+            }}
+            className="lg:col-span-5"
+          >
+            <div className="rounded-[28px] p-8 md:p-10 bg-linear-to-br from-green-100/70 via-green-50 to-transparent shadow-lg h-full">
               <p className="section-title">
                 <IoBulbOutline />
                 <span className="pt-0.5">Our categories</span>
@@ -33,12 +66,16 @@ const Category = () => {
                 Read More <FiPlus />
               </button>
             </div>
-          </div>
+          </motion.div>
 
           {/* -----Right Side----- */}
           <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Card 1 */}
-            <div className="category-card">
+            <motion.div
+              variants={cardVariants}
+              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+              className="category-card"
+            >
               <div className="flex items-center gap-4">
                 <span className="h-14 w-14 rounded-full bg-green-600 grid place-items-center">
                   <FiZap className="text-white text-2xl" />
@@ -56,10 +93,14 @@ const Category = () => {
               >
                 Read More <FaArrowRight />
               </button>
-            </div>
+            </motion.div>
 
             {/* Card 2 */}
-            <div className="category-card">
+            <motion.div
+              variants={cardVariants}
+              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+              className="category-card"
+            >
               <div className="flex items-center gap-4">
                 <span className="h-14 w-14 rounded-full bg-green-600 grid place-items-center">
                   <FaFireFlameCurved className="text-white text-2xl" />
@@ -75,10 +116,14 @@ const Category = () => {
               >
                 Read More <FaArrowRight />
               </button>
-            </div>
+            </motion.div>
 
             {/* Card 3 */}
-            <div className="category-card">
+            <motion.div
+              variants={cardVariants}
+              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+              className="category-card"
+            >
               <div className="flex items-center gap-4">
                 <span className="h-14 w-14 rounded-full bg-green-600 grid place-items-center">
                   <FiDroplet className="text-white text-2xl" />
@@ -94,10 +139,14 @@ const Category = () => {
               >
                 Read More <FaArrowRight />
               </button>
-            </div>
+            </motion.div>
 
             {/* Card 4 */}
-            <div className="category-card">
+            <motion.div
+              variants={cardVariants}
+              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+              className="category-card"
+            >
               <div className="flex items-center gap-4">
                 <span className="h-14 w-14 rounded-full bg-green-600 grid place-items-center">
                   <FiWifi className="text-white text-2xl" />
@@ -115,9 +164,9 @@ const Category = () => {
               >
                 Read More <FaArrowRight />
               </button>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </section>
     </div>
   );

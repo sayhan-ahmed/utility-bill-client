@@ -168,10 +168,35 @@ const SmartAudit = () => {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.2,
+            },
+          },
+        }}
+        className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10"
+      >
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* --- LEFT: THE NEURAL WEAVER (RESTORED COMPLEXITY, NARROW) --- */}
-          <div className="lg:col-span-12 xl:col-span-5 relative flex justify-center perspective-[2000px]">
+          {/* --- LEFT: THE NEURAL WEAVER --- */}
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, scale: 0.8, filter: "blur(10px)" },
+              visible: {
+                opacity: 1,
+                scale: 1,
+                filter: "blur(0px)",
+                transition: { duration: 1, ease: "easeOut" },
+              },
+            }}
+            className="lg:col-span-12 xl:col-span-5 relative flex justify-center perspective-[2000px]"
+          >
             <div className="relative w-full max-w-[400px] aspect-square flex items-center justify-center">
               {/* 1. THE AUDIT ENGINE (NESTED RINGS) */}
               <div className="absolute inset-0 flex items-center justify-center">
@@ -207,7 +232,7 @@ const SmartAudit = () => {
                     className={`absolute ${r.size} rounded-full border-2 ${r.border} border-dashed`}
                   />
                 ))}
-                {/* The Protected Core (STABLE - NO ROTATION) */}
+                {/* The Protected Core */}
                 <motion.div
                   animate={{
                     scale: [1, 1.05, 1],
@@ -230,13 +255,11 @@ const SmartAudit = () => {
                     size={48}
                     strokeWidth={1}
                   />
-
-                  {/* Interior Scan Bracket */}
                   <div className="absolute inset-2 border border-white/20 rounded-2xl animate-ping opacity-20" />
                 </motion.div>
               </div>
 
-              {/* 2. THE ENERGY FILAMENTS (SVG KINETIC WEAVING) */}
+              {/* 2. THE ENERGY FILAMENTS */}
               <svg
                 className="absolute inset-0 w-full h-full pointer-events-none opacity-40 z-10"
                 viewBox="0 0 400 400"
@@ -275,7 +298,6 @@ const SmartAudit = () => {
                     </linearGradient>
                   ))}
                 </defs>
-                {/* Weaving paths from corners to center */}
                 <path
                   d="M 50 50 Q 200 100 200 200"
                   stroke="url(#grad-amber)"
@@ -334,7 +356,7 @@ const SmartAudit = () => {
                 </path>
               </svg>
 
-              {/* 3. THE UTILITY PODS (HOLOGRAPHIC) */}
+              {/* 3. THE UTILITY PODS */}
               {[
                 {
                   id: "p1",
@@ -375,22 +397,16 @@ const SmartAudit = () => {
                   <div
                     className={`absolute inset-0 bg-${p.color}-500/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity`}
                   />
-
-                  {/* Holographic Header */}
                   <div
                     className={`text-${p.color}-400 mb-1.5 drop-shadow-[0_0_10px_rgba(16,185,129,0.3)] transition-transform group-hover:scale-110`}
                   >
                     <p.Icon size={24} strokeWidth={1.5} />
                   </div>
-
-                  {/* Utility Label */}
                   <div className="text-center">
                     <p className="text-[9px] font-black text-white tracking-widest leading-tight group-hover:text-emerald-400 transition-colors uppercase">
                       {p.label}
                     </p>
                   </div>
-
-                  {/* Status Bits */}
                   <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-0.5">
                     {[1, 2, 3].map((d) => {
                       const dotColors = {
@@ -412,10 +428,20 @@ const SmartAudit = () => {
                 </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* --- RIGHT: THE EXECUTIVE PITCH (PROFESSIONAL & LEGIBLE) --- */}
-          <div className="lg:col-span-12 xl:col-span-7 flex flex-col justify-center text-center xl:text-left">
+          {/* --- RIGHT: THE EXECUTIVE PITCH --- */}
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: 50 },
+              visible: {
+                opacity: 1,
+                x: 0,
+                transition: { duration: 0.8, ease: "easeOut" },
+              },
+            }}
+            className="lg:col-span-12 xl:col-span-7 flex flex-col justify-center text-center xl:text-left"
+          >
             <motion.div
               initial={{ opacity: 0, x: -10 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -466,9 +492,9 @@ const SmartAudit = () => {
                 className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.1)_50%,transparent_75%)] bg-size-[250%_250%] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity"
               />
             </button>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
