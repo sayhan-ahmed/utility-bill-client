@@ -9,6 +9,7 @@ import Testimonials from "./Testimonials";
 import FAQ from "./FAQ";
 import SmartAudit from "./SmartAudit";
 import Benefits from "./Benefits";
+import Comparison from "./Comparison";
 import { FiMoon, FiSun } from "react-icons/fi";
 
 const Home = () => {
@@ -66,6 +67,7 @@ const Home = () => {
       <SmartInsights theme={theme} />
       <Category theme={theme} />
       <Benefits />
+      <Comparison />
       <Testimonials />
       <FAQ />
       <div id="contact">

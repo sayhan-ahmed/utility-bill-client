@@ -30,6 +30,24 @@ const faqs = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 30 },
+  visible: {
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
+
 const FAQ = () => {
   const [activeIdx, setActiveIdx] = useState(0);
 
@@ -39,11 +57,15 @@ const FAQ = () => {
       <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-emerald-50 rounded-full blur-3xl opacity-30 pointer-events-none" />
 
       <div className="max-w-4xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+          className="text-center mb-16"
+        >
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            variants={itemVariants}
             className="flex items-center justify-center gap-2 mb-4"
           >
             <span className="h-px w-8 bg-emerald-500" />
@@ -53,33 +75,27 @@ const FAQ = () => {
             <span className="h-px w-8 bg-emerald-500" />
           </motion.div>
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
+            variants={itemVariants}
             className="text-4xl md:text-5xl font-black text-slate-900 mb-6"
           >
             Frequently Asked <span className="text-emerald-600">Questions</span>
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-slate-500 text-lg"
-          >
+          <motion.p variants={itemVariants} className="text-slate-500 text-lg">
             Everything you need to know about managing your bills with BillEase.
           </motion.p>
-        </div>
+        </motion.div>
 
-        <div className="space-y-4">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+          className="space-y-4"
+        >
           {faqs.map((faq, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
+              variants={itemVariants}
               className={`border rounded-3xl overflow-hidden transition-all duration-300 ${
                 activeIdx === idx
                   ? "border-emerald-500 shadow-xl shadow-emerald-500/5 bg-emerald-50/20"
@@ -136,7 +152,7 @@ const FAQ = () => {
               </AnimatePresence>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -2,13 +2,28 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Layers, Shield, Bell, BarChart3, Zap, Globe } from "lucide-react";
 
-const BenefitCard = ({ Icon, title, description, delay }) => {
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 40 },
+  visible: {
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+const BenefitCard = ({ Icon, title, description }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: delay }}
+      variants={itemVariants}
       className="group relative bg-white border border-slate-100 rounded-3xl p-8 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/5 hover:border-emerald-200 h-full"
     >
       {/* Icon Container */}
@@ -78,11 +93,15 @@ const Benefits = () => {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+          className="text-center mb-16"
+        >
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            variants={itemVariants}
             className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50 rounded-full border border-emerald-100 text-emerald-600 text-xs font-bold uppercase tracking-widest mb-6"
           >
             <Layers size={16} />
@@ -90,33 +109,33 @@ const Benefits = () => {
           </motion.div>
 
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
+            variants={itemVariants}
             className="text-4xl md:text-5xl font-black text-slate-900 mb-6"
           >
             Built for Your <span className="text-emerald-600">Convenience</span>
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+            variants={itemVariants}
             className="text-slate-600 text-lg max-w-2xl mx-auto"
           >
             Experience seamless utility management with features designed to
             simplify your life and save you time.
           </motion.p>
-        </div>
+        </motion.div>
 
         {/* Benefits Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           {benefits.map((benefit, index) => (
-            <BenefitCard key={index} {...benefit} delay={index * 0.1} />
+            <BenefitCard key={index} {...benefit} />
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

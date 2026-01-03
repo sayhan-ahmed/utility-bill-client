@@ -107,7 +107,7 @@ export default function Slider() {
         slidesPerView={1}
         loop
         speed={600}
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        autoplay={{ delay: 4000, disableOnInteraction: false }}
         navigation={{ prevEl: ".hero-prev", nextEl: ".hero-next" }}
         pagination={{ el: ".hero-pagination", clickable: true }}
         onSwiper={(swiper) => {
