@@ -16,6 +16,12 @@ import About from "../pages/About/About";
 import TermsConditions from "../pages/Legal/TermsConditions";
 import PrivacyPolicy from "../pages/Legal/PrivacyPolicy";
 import HelpCenter from "../pages/Help/HelpCenter";
+import DashboardLayout from "../layouts/DashboardLayout/DashboardLayout";
+import DashboardHome from "../pages/Dashboard/DashboardHome";
+import MyBills from "../pages/Dashboard/MyBills";
+import AddBill from "../pages/Dashboard/AddBill";
+import EditBill from "../pages/Dashboard/EditBill";
+import Profile from "../pages/Dashboard/Profile";
 
 const router = createBrowserRouter([
   {
@@ -120,6 +126,57 @@ const router = createBrowserRouter([
         element: (
           <RouteTitle title="Help Center">
             <HelpCenter />
+          </RouteTitle>
+        ),
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
+      {
+        index: true,
+        element: (
+          <RouteTitle title="Dashboard">
+            <DashboardHome />
+          </RouteTitle>
+        ),
+      },
+      {
+        path: "my-bills",
+        element: (
+          <RouteTitle title="My Bills">
+            <MyBills />
+          </RouteTitle>
+        ),
+      },
+      {
+        path: "add-bill",
+        element: (
+          <RouteTitle title="Add Bill">
+            <AddBill />
+          </RouteTitle>
+        ),
+      },
+      {
+        path: "edit-bill/:id",
+        element: (
+          <RouteTitle title="Edit Bill">
+            <EditBill />
+          </RouteTitle>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <RouteTitle title="Profile">
+            <Profile />
           </RouteTitle>
         ),
       },

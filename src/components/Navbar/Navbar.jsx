@@ -67,8 +67,8 @@ const Navbar = () => {
     { to: "/contact", label: "Contact", icon: Mail },
     ...(user?.email
       ? [
+          { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
           { to: "/my-bills", label: "Payments", icon: History },
-          { to: "/#statistics", label: "Stats", icon: BarChart3 },
         ]
       : []),
   ];
@@ -257,6 +257,7 @@ const Navbar = () => {
                           label="Dashboard"
                           delay={0.05}
                           onClick={() => {
+                            navigate("/dashboard");
                             setDropdownOpen(false);
                           }}
                         />
