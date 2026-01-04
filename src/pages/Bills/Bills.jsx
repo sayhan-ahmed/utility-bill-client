@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -9,6 +9,11 @@ import {
   Loader2,
   Send,
   Mail,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  ArrowUpDown,
+  Calendar,
 } from "lucide-react";
 import { FaBangladeshiTakaSign } from "react-icons/fa6";
 import { LuNewspaper } from "react-icons/lu";
@@ -50,6 +55,12 @@ export default function Bills() {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // New states for search, sort, and pagination
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("date-desc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
+
   const [newBillForm, setNewBillForm] = useState({
     title: "",
     category: "gas",
@@ -88,6 +99,55 @@ export default function Bills() {
       .catch((err) => console.error("Bills fetch error:", err))
       .finally(() => setLoading(false));
   }, [selectedCategory]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchQuery, sortBy]);
+
+  // Filter, sort, and paginate bills
+  const processedBills = useMemo(() => {
+    let filtered = [...bills];
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (bill) =>
+          bill.title?.toLowerCase().includes(query) ||
+          bill.location?.toLowerCase().includes(query) ||
+          bill.description?.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply sorting
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "amount-asc":
+          return (a.amount || 0) - (b.amount || 0);
+        case "amount-desc":
+          return (b.amount || 0) - (a.amount || 0);
+        case "date-asc":
+          return new Date(a.date) - new Date(b.date);
+        case "date-desc":
+          return new Date(b.date) - new Date(a.date);
+        case "title-asc":
+          return (a.title || "").localeCompare(b.title || "");
+        case "title-desc":
+          return (b.title || "").localeCompare(a.title || "");
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  }, [bills, searchQuery, sortBy]);
+
+  // Pagination
+  const totalPages = Math.ceil(processedBills.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentBills = processedBills.slice(startIndex, endIndex);
 
   // Form handlers
   const handleFormChange = (e) => {
@@ -187,22 +247,76 @@ export default function Bills() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
         {/* ----- Left column: Cards ----- */}
         <div className="lg:col-span-3">
-          <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
-            <h3 className="text-2xl font-semibold text-gray-800">All Bills</h3>
+          {/* Search and Filters Row */}
+          <div className="flex flex-col gap-4 mb-6">
+            {/* Search Bar */}
             <div className="relative">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="appearance-none w-full sm:w-48 border border-gray-300 rounded-lg px-4 py-2.5 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-200 transition pr-10"
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-                <ChevronDown className="w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search bills by title, location, or description..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-200 transition"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            {/* Filters and Sort Row */}
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+              <h3 className="text-2xl font-semibold text-gray-800">
+                All Bills
+                {processedBills.length > 0 && (
+                  <span className="text-lg text-gray-500 ml-2">
+                    ({processedBills.length})
+                  </span>
+                )}
+              </h3>
+              <div className="flex flex-col sm:flex-row gap-3">
+                {/* Category Filter */}
+                <div className="relative">
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="appearance-none w-full sm:w-48 border border-gray-300 rounded-lg px-4 py-2.5 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-200 transition pr-10"
+                  >
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                  </div>
+                </div>
+
+                {/* Sort Dropdown */}
+                <div className="relative">
+                  <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="appearance-none w-full sm:w-60 border border-gray-300 rounded-lg pl-10 pr-10 py-2.5 bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-200 transition"
+                  >
+                    <option value="date-desc">Date (Newest First)</option>
+                    <option value="date-asc">Date (Oldest First)</option>
+                    <option value="amount-desc">Amount (High to Low)</option>
+                    <option value="amount-asc">Amount (Low to High)</option>
+                    <option value="title-asc">Title (A-Z)</option>
+                    <option value="title-desc">Title (Z-A)</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -224,78 +338,155 @@ export default function Bills() {
               ))}
             </div>
           ) : (
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={selectedCategory}
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
-              >
-                {bills.length > 0 ? (
-                  bills.map((bill) => (
-                    <motion.div
-                      key={bill._id}
-                      variants={cardVariants}
-                      layout
-                      whileHover={{ y: -5, scale: 1.02 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                      className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden group flex flex-col"
-                    >
-                      <div className="h-48 w-full overflow-hidden">
-                        <img
-                          src={bill.image}
-                          alt={bill.title}
-                          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                      <div className="p-4 flex flex-col grow">
-                        <div className="grow">
-                          <span className="inline-block bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full mb-2">
-                            {bill.category}
-                          </span>
-                          <h3 className="text-lg font-semibold text-gray-900 line-clamp-1 mt-1">
-                            {bill.title}
-                          </h3>
-                          <div className="mt-2 space-y-1">
-                            <p className="flex items-center text-sm text-gray-500">
-                              <MapPin className="w-4 h-4 mr-1.5 text-gray-400" />
-                              {bill.location}
-                            </p>
-                            <p className="flex items-center text-lg font-semibold text-green-600">
-                              <FaBangladeshiTakaSign className="w-4 h-4 mb-0.5 mr-1 text-green-600" />
-                              {bill.amount}
-                            </p>
-                          </div>
+            <>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`${selectedCategory}-${searchQuery}-${sortBy}-${currentPage}`}
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+                >
+                  {currentBills.length > 0 ? (
+                    currentBills.map((bill) => (
+                      <motion.div
+                        key={bill._id}
+                        variants={cardVariants}
+                        layout
+                        whileHover={{ y: -5, scale: 1.02 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                        className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden group flex flex-col"
+                      >
+                        <div className="h-48 w-full overflow-hidden">
+                          <img
+                            src={bill.image}
+                            alt={bill.title}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
                         </div>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => {
-                            navigate(`/bills/${bill._id}`);
-                          }}
-                          className="mt-4 w-full inline-flex items-center justify-center gap-1 text-sm font-medium text-white bg-green-600 px-4 py-2.5 rounded-lg hover:bg-green-700 transition-colors"
-                        >
-                          See Details
-                        </motion.button>
-                      </div>
+                        <div className="p-4 flex flex-col grow">
+                          <div className="grow">
+                            <span className="inline-block bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full mb-2">
+                              {bill.category}
+                            </span>
+                            <h3 className="text-lg font-semibold text-gray-900 line-clamp-1 mt-1">
+                              {bill.title}
+                            </h3>
+                            <div className="mt-2 space-y-1">
+                              <p className="flex items-center text-sm text-gray-500">
+                                <MapPin className="w-4 h-4 mr-1.5 text-gray-400" />
+                                {bill.location}
+                              </p>
+                              <p className="flex items-center text-sm text-gray-500">
+                                <Calendar className="w-4 h-4 mr-1.5 text-gray-400" />
+                                {new Date(bill.date).toLocaleDateString(
+                                  "en-US",
+                                  {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                  }
+                                )}
+                              </p>
+                              <p className="flex items-center text-lg font-semibold text-green-600">
+                                <FaBangladeshiTakaSign className="w-4 h-4 mb-0.5 mr-1 text-green-600" />
+                                {bill.amount}
+                              </p>
+                            </div>
+                          </div>
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => {
+                              navigate(`/bills/${bill._id}`);
+                            }}
+                            className="mt-4 w-full inline-flex items-center justify-center gap-1 text-sm font-medium text-white bg-green-600 px-4 py-2.5 rounded-lg hover:bg-green-700 transition-colors"
+                          >
+                            See Details
+                          </motion.button>
+                        </div>
+                      </motion.div>
+                    ))
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="md:col-span-2 lg:col-span-3 text-center text-gray-500 py-20 flex flex-col items-center"
+                    >
+                      <SearchX className="w-12 h-12 text-gray-400 mb-4" />
+                      <h3 className="text-xl font-semibold">No Bills Found</h3>
+                      <p>
+                        {searchQuery
+                          ? `No bills match your search "${searchQuery}"`
+                          : `No bills were found in the "${selectedCategory}" category.`}
+                      </p>
                     </motion.div>
-                  ))
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="md:col-span-2 lg:col-span-3 text-center text-gray-500 py-20 flex flex-col items-center"
+                  )}
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-8 flex items-center justify-center gap-2">
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(1, prev - 1))
+                    }
+                    disabled={currentPage === 1}
+                    className="p-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
                   >
-                    <SearchX className="w-12 h-12 text-gray-400 mb-4" />
-                    <h3 className="text-xl font-semibold">No Bills Found</h3>
-                    <p>
-                      No bills were found in the "{selectedCategory}" category.
-                    </p>
-                  </motion.div>
-                )}
-              </motion.div>
-            </AnimatePresence>
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+
+                  <div className="flex gap-1">
+                    {[...Array(totalPages)].map((_, idx) => {
+                      const pageNum = idx + 1;
+                      // Show first page, last page, current page, and pages around current
+                      if (
+                        pageNum === 1 ||
+                        pageNum === totalPages ||
+                        (pageNum >= currentPage - 1 &&
+                          pageNum <= currentPage + 1)
+                      ) {
+                        return (
+                          <button
+                            key={pageNum}
+                            onClick={() => setCurrentPage(pageNum)}
+                            className={`min-w-[40px] px-3 py-2 rounded-lg border transition ${
+                              currentPage === pageNum
+                                ? "bg-green-600 text-white border-green-600"
+                                : "bg-white border-gray-300 hover:bg-gray-50"
+                            }`}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      } else if (
+                        pageNum === currentPage - 2 ||
+                        pageNum === currentPage + 2
+                      ) {
+                        return (
+                          <span key={pageNum} className="px-2 py-2">
+                            ...
+                          </span>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                    }
+                    disabled={currentPage === totalPages}
+                    className="p-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
 
