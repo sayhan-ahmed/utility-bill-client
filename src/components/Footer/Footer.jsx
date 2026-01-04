@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaFacebookF, FaInstagram, FaPinterestP } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FiMail, FiMapPin, FiPhone } from "react-icons/fi";
-import { NavLink } from "react-router";
+import { Zap } from "lucide-react";
+import { NavLink, Link } from "react-router";
+import toast from "react-hot-toast";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    if (email) {
+      toast.success("Successfully subscribed to newsletter!");
+      setEmail("");
+    }
+  };
+
   return (
     <footer className="bg-gray-100/40 text-[#1E2631]">
       {/* -----Top: Logo Left, Social Right----- */}
@@ -12,18 +24,18 @@ const Footer = () => {
         <div className="flex items-center justify-between">
           {/* Logo & Description */}
           <div>
-            <div className="flex items-center gap-2">
-              <span className="brand-logo">B</span>
-              <span className="text-2xl font-semibold tracking-tight">
-                Bill<span className="text-green-600">Ease</span>
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-linear-to-br from-[#009E67] to-[#00875A] text-white shadow-md">
+                <Zap size={20} className="fill-white" />
+              </div>
+              <span className="text-2xl font-black tracking-tight text-slate-900">
+                Bill<span className="text-[#009E67]">Ease</span>
               </span>
-            </div>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6">
-              <p className="text-sm text-[#1E2631]/70 ml-6">
-                BillEase helps you view, track, and pay your monthly utility
-                bills securely in one place.
-              </p>
-            </div>
+            </Link>
+            <p className="text-sm text-[#1E2631]/70 mt-3 max-w-xs">
+              BillEase helps you view, track, and pay your monthly utility bills
+              securely in one place.
+            </p>
           </div>
 
           {/* socials */}
@@ -85,9 +97,8 @@ const Footer = () => {
             {[
               { to: "/", label: "Home" },
               { to: "/bills", label: "All Bills" },
-              { to: "/my-bills", label: "My Pay Bills" },
               { to: "/about", label: "About Us" },
-              { to: "/contact", label: "Contact" },
+              { to: "/contact", label: "Contact Support" },
             ].map((l) => (
               <li key={l.to}>
                 <NavLink
@@ -101,20 +112,24 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Our Service */}
+        {/* Quick Access */}
         <div>
-          <h4 className="text-lg font-semibold mb-4">Our Service</h4>
+          <h4 className="text-lg font-semibold mb-4">Quick Access</h4>
           <ul className="space-y-3 text-sm text-[#1E2631]/80">
-            {["Electricity", "Gas", "Water", "Internet", "Financial"].map(
-              (item) => (
-                <li
-                  key={item}
-                  className="transition-all duration-300 ease-out hover:text-green-700 hover:translate-x-1 hover:scale-105"
+            {[
+              { to: "/help-center", label: "Help Center" },
+              { to: "/terms-conditions", label: "Terms & Conditions" },
+              { to: "/privacy-policy", label: "Privacy Policy" },
+            ].map((l) => (
+              <li key={l.to}>
+                <NavLink
+                  to={l.to}
+                  className="inline-block transition-all duration-300 ease-out hover:text-green-700 hover:translate-x-1 hover:scale-105"
                 >
-                  {item}
-                </li>
-              )
-            )}
+                  {l.label}
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -125,13 +140,7 @@ const Footer = () => {
             Get monthly updates about bills, payments, and new features.
           </p>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              // TODO: wire to backend or email service
-            }}
-            className="space-y-4"
-          >
+          <form onSubmit={handleNewsletterSubmit} className="space-y-4">
             <div
               className="rounded-full bg-white shadow-sm flex items-center
                             px-4 py-3 transition focus-within:shadow-md"
@@ -139,6 +148,8 @@ const Footer = () => {
               <input
                 type="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="flex-1 outline-none bg-transparent text-sm"
               />
@@ -151,31 +162,22 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* -----Bottom: Copyright & Other Links----- */}
+      {/* -----Bottom: Copyright & Developer----- */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
         <hr className="border-[#1E2631]/10 mb-4" />
         <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-[#1E2631]/60">
           <p>© {new Date().getFullYear()} BillEase — All Rights Reserved</p>
-          <div className="hidden md:flex gap-6">
-            <NavLink
-              to="/terms-conditions"
-              className="transition hover:text-green-700"
+          <p className="flex items-center gap-1">
+            Developed by{" "}
+            <a
+              href="https://sayhan-portfolio.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-green-600 hover:text-green-700 font-semibold transition-colors"
             >
-              Terms & Conditions
-            </NavLink>
-            <NavLink
-              to="/privacy-policy"
-              className="transition hover:text-green-700"
-            >
-              Privacy Policy
-            </NavLink>
-            <NavLink
-              to="/help-center"
-              className="transition hover:text-green-700"
-            >
-              Help Center
-            </NavLink>
-          </div>
+              Sayhan Ahmed
+            </a>
+          </p>
         </div>
       </div>
     </footer>

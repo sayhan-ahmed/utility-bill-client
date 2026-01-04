@@ -11,6 +11,11 @@ import PrivateRoute from "../provider/PrivateRoute";
 import BillDetails from "../pages/BillDetails/BillDetails";
 import RouteTitle from "../components/RouteTitle/RouteTitle";
 import Auth from "../pages/Auth/Auth";
+import Contact from "../pages/Contact/Contact";
+import About from "../pages/About/About";
+import TermsConditions from "../pages/Legal/TermsConditions";
+import PrivacyPolicy from "../pages/Legal/PrivacyPolicy";
+import HelpCenter from "../pages/Help/HelpCenter";
 
 const router = createBrowserRouter([
   {
@@ -76,6 +81,46 @@ const router = createBrowserRouter([
               <MyPayBills />
             </RouteTitle>
           </PrivateRoute>
+        ),
+      },
+      {
+        path: "contact",
+        element: (
+          <RouteTitle title="Contact Us">
+            <Contact />
+          </RouteTitle>
+        ),
+      },
+      {
+        path: "about",
+        element: (
+          <RouteTitle title="About Us">
+            <About />
+          </RouteTitle>
+        ),
+      },
+      {
+        path: "terms-conditions",
+        element: (
+          <RouteTitle title="Terms & Conditions">
+            <TermsConditions />
+          </RouteTitle>
+        ),
+      },
+      {
+        path: "privacy-policy",
+        element: (
+          <RouteTitle title="Privacy Policy">
+            <PrivacyPolicy />
+          </RouteTitle>
+        ),
+      },
+      {
+        path: "help-center",
+        element: (
+          <RouteTitle title="Help Center">
+            <HelpCenter />
+          </RouteTitle>
         ),
       },
     ],
