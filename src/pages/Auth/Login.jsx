@@ -175,6 +175,21 @@ const Login = () => {
             Continue with Google
           </button>
 
+          {/* Quick Login (Demo) */}
+          <button
+            type="button"
+            onClick={() => {
+              const form = document.querySelector("form");
+              form.email.value = "sayhanahmed911@gmail.com";
+              form.password.value = "Demo1234";
+              toast.success("Demo credentials filled! Click Login to proceed.");
+            }}
+            className="mt-3 w-full rounded-full bg-green-600/20 text-green-300 font-medium py-3 border border-green-500/30 hover:bg-green-600/30 transition flex items-center justify-center gap-2"
+          >
+            <span className="text-lg">⚡</span>
+            Quick Login (Demo)
+          </button>
+
           {/* Footer */}
           <p className="mt-6 text-center text-white/90 text-sm">
             Don’t have an account?{" "}

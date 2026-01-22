@@ -24,9 +24,12 @@ const EditBill = () => {
 
   const categories = ["Electricity", "Gas", "Water", "Internet", "Financial"];
 
+  // Use local server by default for development features
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   // Fetch bill data
   useEffect(() => {
-    fetch(`https://utility-bill-server-eight.vercel.app/bills/${id}`)
+    fetch(`${API_URL}/bills/${id}`)
       .then((res) => res.json())
       .then((data) => {
         // Verify user owns this bill
@@ -42,6 +45,7 @@ const EditBill = () => {
           location: data.location || "",
           amount: data.amount || "",
           date: data.date ? data.date.split("T")[0] : "",
+          image: data.image || "",
           description: data.description || "",
           status: data.status || "Pending",
         });
@@ -70,7 +74,7 @@ const EditBill = () => {
       updatedAt: new Date().toISOString(),
     };
 
-    fetch(`https://utility-bill-server-eight.vercel.app/bills/${id}`, {
+    fetch(`${API_URL}/bills/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -202,6 +206,21 @@ const EditBill = () => {
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
               />
             </div>
+          </div>
+
+          {/* Image URL */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Bill Image URL
+            </label>
+            <input
+              type="url"
+              name="image"
+              value={formData.image}
+              onChange={handleChange}
+              placeholder="https://example.com/bill-image.jpg"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            />
           </div>
 
           {/* Status */}

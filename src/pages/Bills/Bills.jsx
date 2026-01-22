@@ -490,114 +490,91 @@ export default function Bills() {
           )}
         </div>
 
-        {/* ----- Right column: Add bill form --- */}
+        {/* ----- Right column: Quick Stats & Tips --- */}
         <motion.div
           variants={formVariants}
           initial="hidden"
           animate="visible"
           className="lg:col-span-1"
         >
-          <div className="bg-white p-5 pr-0 rounded-2xl shadow-xl border border-gray-100 sticky top-10">
-            <div className="flex items-center gap-3 mb-4 pt-2">
-              <div className="p-2 bg-green-100 rounded-full">
-                <PlusCircle className="w-6 h-6 text-green-700" />
+          <div className="space-y-6">
+            {/* Quick Stats Card */}
+            <div className="bg-linear-to-br from-green-50 to-emerald-50 p-6 rounded-2xl shadow-lg border border-green-100">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-green-600 rounded-full">
+                  <LuNewspaper className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800">
+                  Quick Stats
+                </h3>
               </div>
-              <h3 className="text-2xl font-semibold text-gray-800">
-                Add New Bill
-              </h3>
+
+              <div className="space-y-4">
+                <div className="bg-white p-4 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-600 mb-1">Total Bills</p>
+                  <p className="text-3xl font-black text-green-700">
+                    {bills.length}
+                  </p>
+                </div>
+
+                <div className="bg-white p-4 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-600 mb-1">Categories</p>
+                  <p className="text-3xl font-black text-green-700">
+                    {categories.length - 1}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">Available types</p>
+                </div>
+
+                <div className="bg-white p-4 rounded-xl shadow-sm">
+                  <p className="text-sm text-gray-600 mb-1">Showing</p>
+                  <p className="text-3xl font-black text-green-700">
+                    {currentBills.length}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Bills on this page
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <form
-              onSubmit={handleFormSubmit}
-              className="space-y-4 lg:max-h-[70vh] lg:overflow-y-auto lg:p-2"
-            >
-              <InputField
-                label="Bill Title"
-                name="title"
-                value={newBillForm.title}
-                onChange={handleFormChange}
-                placeholder="e.g., Gas Bill - May 2025"
-                required
-              />
-              <InputField
-                label="Billing Email"
-                name="email"
-                type="email"
-                icon={Mail}
-                value={newBillForm.email}
-                onChange={handleFormChange}
-                placeholder="payment@titas.com"
-                required
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <SelectField
-                  label="Category"
-                  name="category"
-                  value={newBillForm.category}
-                  onChange={handleFormChange}
-                  options={[
-                    { value: "gas", label: "Gas" },
-                    { value: "electricity", label: "Electricity" },
-                    { value: "water", label: "Water" },
-                    { value: "internet", label: "Internet" },
-                  ]}
-                  required
-                />
-                <InputField
-                  label="Amount"
-                  name="amount"
-                  type="number"
-                  value={newBillForm.amount}
-                  onChange={handleFormChange}
-                  placeholder="e.g., 500"
-                  required
-                />
-              </div>
-              <InputField
-                label="Location"
-                name="location"
-                value={newBillForm.location}
-                onChange={handleFormChange}
-                placeholder="e.g., Mirpur-10, Dhaka"
-                required
-              />
-              <InputField
-                label="Image URL"
-                name="image"
-                value={newBillForm.image}
-                onChange={handleFormChange}
-                placeholder="https://..."
-              />
-              <InputField
-                label="Bill Date"
-                name="date"
-                type="date"
-                value={newBillForm.date}
-                onChange={handleFormChange}
-                required
-              />
-              <TextAreaField
-                label="Description"
-                name="description"
-                value={newBillForm.description}
-                onChange={handleFormChange}
-                placeholder="A short description of the bill..."
-              />
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full mt-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition-all flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <Send className="w-5 h-5" />
-                )}
-                {isSubmitting ? "Adding..." : "Add Bill"}
-              </motion.button>
-            </form>
+            {/* Tips Card */}
+            <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <span className="text-2xl">💡</span>
+                Quick Tips
+              </h3>
+
+              <ul className="space-y-3 text-sm text-gray-700">
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold mt-0.5">✓</span>
+                  <span>Use search to find bills by title or location</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold mt-0.5">✓</span>
+                  <span>Filter by category to view specific bill types</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold mt-0.5">✓</span>
+                  <span>Sort bills by date, amount, or title</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold mt-0.5">✓</span>
+                  <span>Click on any bill to view full details</span>
+                </li>
+              </ul>
+
+              {user && (
+                <div className="mt-6 pt-4 border-t border-gray-200">
+                  <button
+                    onClick={() => navigate("/dashboard/add-bill")}
+                    className="w-full px-4 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition-all flex items-center justify-center gap-2"
+                  >
+                    <PlusCircle className="w-5 h-5" />
+                    Add Your Bill
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </motion.div>
       </div>

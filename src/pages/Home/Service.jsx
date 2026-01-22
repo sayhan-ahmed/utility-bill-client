@@ -4,6 +4,7 @@ import { FaPlay } from "react-icons/fa";
 import { FaUserPen } from "react-icons/fa6";
 import { MdEditNote, MdSupportAgent } from "react-icons/md";
 import { TbCertificate2 } from "react-icons/tb";
+import { Link } from "react-router";
 
 const Service = () => {
   const containerVariants = {
@@ -155,7 +156,9 @@ const Service = () => {
             }}
             className="h-1/5 flex items-end mt-0 md:mt-10"
           >
-            <button className="btn-primary">Contact Us</button>
+            <Link to="/contact" className="btn-primary">
+              Contact Us
+            </Link>
           </motion.div>
         </motion.div>
       </motion.div>

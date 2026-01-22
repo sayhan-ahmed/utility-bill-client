@@ -24,7 +24,7 @@ const Profile = () => {
         className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
       >
         {/* Profile Header */}
-        <div className="bg-gradient-to-br from-green-600 to-emerald-600 p-8">
+        <div className="bg-linear-to-br from-green-600 to-emerald-600 p-8">
           <div className="flex items-center gap-6">
             <div className="h-24 w-24 rounded-full bg-white flex items-center justify-center overflow-hidden">
               {user?.photoURL ? (

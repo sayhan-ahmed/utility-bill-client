@@ -313,7 +313,7 @@ export default function Slider() {
                       className="flex flex-wrap gap-4"
                     >
                       <a
-                        href="/bills"
+                        href="/dashboard"
                         className="px-6 py-3 md:px-8 md:py-4 bg-linear-to-r from-[#009E67] to-emerald-600 text-white font-bold rounded-xl shadow-lg hover:shadow-emerald-200 hover:scale-105 transition-all flex items-center gap-2 text-sm md:text-base group"
                       >
                         View Dashboard

@@ -25,12 +25,13 @@ const MyBills = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  // Use dynamic API URL
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   // Fetch user's bills
   useEffect(() => {
     if (user?.email) {
-      fetch(
-        `https://utility-bill-server-eight.vercel.app/bills?email=${user.email}`
-      )
+      fetch(`${API_URL}/bills?email=${user.email}`)
         .then((res) => res.json())
         .then((data) => {
           setBills(data);
@@ -84,7 +85,7 @@ const MyBills = () => {
 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this bill?")) {
-      fetch(`https://utility-bill-server-eight.vercel.app/bills/${id}`, {
+      fetch(`${API_URL}/bills/${id}`, {
         method: "DELETE",
       })
         .then((res) => res.json())
@@ -246,7 +247,7 @@ const MyBills = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <div className="flex items-center gap-2">
                       <Link
-                        to={`/bill-details/${bill._id}`}
+                        to={`/bills/${bill._id}`}
                         className="p-1.5 hover:bg-blue-50 rounded-lg transition-colors"
                         title="View"
                       >
