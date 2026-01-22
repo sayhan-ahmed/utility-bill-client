@@ -14,8 +14,11 @@ import {
   Mail,
   ArrowRight,
   User as UserIcon,
+  Sun,
+  Moon,
 } from "lucide-react";
 import AuthContext from "../../provider/AuthContext";
+import { ThemeContext } from "../../provider/ThemeProvider";
 import toast from "react-hot-toast";
 import {
   motion,
@@ -27,6 +30,7 @@ import {
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -57,7 +61,7 @@ const Navbar = () => {
         loading: "Logging out...",
         success: <b>Logged out successfully!</b>,
         error: (err) => <b>{err.message}</b>,
-      }
+      },
     );
   };
 
@@ -100,11 +104,11 @@ const Navbar = () => {
     <>
       <nav className="fixed top-0 left-0 right-0 z-500 border-b border-slate-200/90 shadow-xs">
         <div
-          className="relative w-full flex items-center justify-between transition-all duration-700 border-b border-slate-200/60 shadow-[0_4px_24px_rgba(0,0,0,0.06)] group"
+          className="relative w-full flex items-center justify-between transition-all duration-700 border-b border-slate-200/60 dark:border-slate-800/60 shadow-[0_4px_24px_rgba(0,0,0,0.06)] group bg-white/95 dark:bg-slate-950/95"
           style={{
             height: "80px",
             padding: "0 2rem",
-            background: "rgba(255, 255, 255, 0.98)",
+            // background: "rgba(255, 255, 255, 0.98)", // Removed in favor of classes
             backdropFilter: "blur(20px) saturate(180%)",
             WebkitBackdropFilter: "blur(20px) saturate(180%)",
           }}
@@ -165,7 +169,7 @@ const Navbar = () => {
           </div>
 
           {/* User Profile Dropdown - Right */}
-          <div className="hidden lg:flex items-center z-10">
+          <div className="hidden lg:flex items-center z-10 gap-3">
             {user?.email ? (
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -345,6 +349,7 @@ const Navbar = () => {
                     BillEase
                   </span>
                 </div>
+
                 <button
                   onClick={closeMenu}
                   className="p-3 bg-slate-50 hover:bg-slate-100 rounded-2xl text-slate-500 transition-colors"

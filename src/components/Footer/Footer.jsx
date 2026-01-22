@@ -18,7 +18,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-100/40 text-[#1E2631]">
+    <footer className="bg-gray-100/40 dark:bg-slate-950 border-t border-transparent dark:border-slate-800 text-[#1E2631] dark:text-slate-300 transition-colors duration-300">
       {/* -----Top: Logo Left, Social Right----- */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-10">
         <div className="flex items-center justify-between">
@@ -28,31 +28,43 @@ const Footer = () => {
               <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-linear-to-br from-[#009E67] to-[#00875A] text-white shadow-md">
                 <Zap size={20} className="fill-white" />
               </div>
-              <span className="text-2xl font-black tracking-tight text-slate-900">
+              <span className="text-2xl font-black tracking-tight text-slate-900 dark:text-slate-100">
                 Bill<span className="text-[#009E67]">Ease</span>
               </span>
             </Link>
-            <p className="text-sm text-[#1E2631]/70 mt-3 max-w-xs">
+            <p className="text-sm text-[#1E2631]/70 dark:text-slate-400 mt-3 max-w-xs">
               BillEase helps you view, track, and pay your monthly utility bills
               securely in one place.
             </p>
           </div>
 
           {/* socials */}
-          <div className="hidden sm:flex items-center gap-3 text-[#1E2631]/80">
-            <a href="#" className="btn-social group">
+          <div className="hidden sm:flex items-center gap-3 text-[#1E2631]/80 dark:text-slate-400">
+            <a
+              href="#"
+              className="btn-social group dark:bg-slate-800 dark:text-slate-200"
+            >
               <FaFacebookF className="btn-social-icon" />
             </a>
 
-            <a href="#" className="btn-social group">
+            <a
+              href="#"
+              className="btn-social group dark:bg-slate-800 dark:text-slate-200"
+            >
               <FaXTwitter className="btn-social-icon" />
             </a>
 
-            <a href="#" className="btn-social group">
+            <a
+              href="#"
+              className="btn-social group dark:bg-slate-800 dark:text-slate-200"
+            >
               <FaInstagram className="btn-social-icon" />
             </a>
 
-            <a href="#" className="btn-social group">
+            <a
+              href="#"
+              className="btn-social group dark:bg-slate-800 dark:text-slate-200"
+            >
               <FaPinterestP className="btn-social-icon" />
             </a>
           </div>
@@ -64,7 +76,9 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* Contact */}
         <div>
-          <h4 className="text-lg font-semibold mb-4">Contact US</h4>
+          <h4 className="text-lg font-semibold mb-4 text-slate-900 dark:text-slate-100">
+            Contact US
+          </h4>
           <div className="space-y-4">
             {/* phone */}
             <div className="group flex items-center gap-3">
@@ -92,8 +106,10 @@ const Footer = () => {
 
         {/* Useful Links */}
         <div>
-          <h4 className="text-lg font-semibold mb-4">Useful Links</h4>
-          <ul className="space-y-3 text-sm text-[#1E2631]/80">
+          <h4 className="text-lg font-semibold mb-4 text-slate-900 dark:text-slate-100">
+            Useful Links
+          </h4>
+          <ul className="space-y-3 text-sm text-[#1E2631]/80 dark:text-slate-400">
             {[
               { to: "/", label: "Home" },
               { to: "/bills", label: "All Bills" },
@@ -103,7 +119,7 @@ const Footer = () => {
               <li key={l.to}>
                 <NavLink
                   to={l.to}
-                  className="inline-block transition-all duration-300 ease-out hover:text-green-700 hover:translate-x-1 hover:scale-105"
+                  className="inline-block transition-all duration-300 ease-out hover:text-green-700 dark:hover:text-green-400 hover:translate-x-1 hover:scale-105"
                 >
                   {l.label}
                 </NavLink>
@@ -114,8 +130,10 @@ const Footer = () => {
 
         {/* Quick Access */}
         <div>
-          <h4 className="text-lg font-semibold mb-4">Quick Access</h4>
-          <ul className="space-y-3 text-sm text-[#1E2631]/80">
+          <h4 className="text-lg font-semibold mb-4 text-slate-900 dark:text-slate-100">
+            Quick Access
+          </h4>
+          <ul className="space-y-3 text-sm text-[#1E2631]/80 dark:text-slate-400">
             {[
               { to: "/help-center", label: "Help Center" },
               { to: "/terms-conditions", label: "Terms & Conditions" },
@@ -124,7 +142,7 @@ const Footer = () => {
               <li key={l.to}>
                 <NavLink
                   to={l.to}
-                  className="inline-block transition-all duration-300 ease-out hover:text-green-700 hover:translate-x-1 hover:scale-105"
+                  className="inline-block transition-all duration-300 ease-out hover:text-green-700 dark:hover:text-green-400 hover:translate-x-1 hover:scale-105"
                 >
                   {l.label}
                 </NavLink>
@@ -135,15 +153,17 @@ const Footer = () => {
 
         {/* Newsletter */}
         <div>
-          <h4 className="text-lg font-semibold mb-4">Newsletter</h4>
-          <p className="text-sm opacity-80 mb-4">
+          <h4 className="text-lg font-semibold mb-4 text-slate-900 dark:text-slate-100">
+            Newsletter
+          </h4>
+          <p className="text-sm opacity-80 mb-4 dark:text-slate-400">
             Get monthly updates about bills, payments, and new features.
           </p>
 
           <form onSubmit={handleNewsletterSubmit} className="space-y-4">
             <div
-              className="rounded-full bg-white shadow-sm flex items-center
-                            px-4 py-3 transition focus-within:shadow-md"
+              className="rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center
+                            px-4 py-3 transition focus-within:shadow-md border border-slate-100 dark:border-slate-700"
             >
               <input
                 type="email"
@@ -151,7 +171,7 @@ const Footer = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="flex-1 outline-none bg-transparent text-sm"
+                className="flex-1 outline-none bg-transparent text-sm dark:text-white"
               />
             </div>
 
@@ -165,7 +185,7 @@ const Footer = () => {
       {/* -----Bottom: Copyright & Developer----- */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8">
         <hr className="border-[#1E2631]/10 mb-4" />
-        <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-[#1E2631]/60">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-[#1E2631]/60 dark:text-slate-500">
           <p>© {new Date().getFullYear()} BillEase — All Rights Reserved</p>
           <p className="flex items-center gap-1">
             Developed by{" "}
