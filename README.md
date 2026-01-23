@@ -18,7 +18,6 @@ Built with React (Vite), Tailwind CSS, Firebase Authentication, and Express + Mo
 - 💳 **Pay Current Month Bills** only, with validation on bill date
 - 📋 **My Pay Bills Dashboard** — view, update, and delete your own bills
 - 📄 **PDF Report Download** — generate and export all your paid bills as a PDF using jsPDF + AutoTable
-- 🌗 **Dark/Light Theme Toggle** on Home Page
 - ⚡ **Responsive UI** built with Tailwind CSS & Framer Motion
 - 🔍 **Dynamic Routing & Protected Routes** using React Router v7
 - 💬 **Toast Notifications** for all CRUD actions (no default alerts used)
