@@ -14,11 +14,8 @@ import {
   Mail,
   ArrowRight,
   User as UserIcon,
-  Sun,
-  Moon,
 } from "lucide-react";
 import AuthContext from "../../provider/AuthContext";
-import { ThemeContext } from "../../provider/ThemeProvider";
 import toast from "react-hot-toast";
 import {
   motion,
@@ -30,7 +27,6 @@ import {
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
-  const { theme, toggleTheme } = useContext(ThemeContext);
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -84,11 +80,11 @@ const Navbar = () => {
       to={to}
       onClick={closeMenu}
       className={({ isActive }) =>
-        `relative px-5 py-2.5 text-sm font-bold transition-all duration-500 group flex items-center gap-2 rounded-full
+        `relative px-5 py-2.5 text-sm font-bold transition-all duration-300 flex items-center gap-2 rounded-full ${isActive ? "active" : ""}
          ${
            isActive
-             ? "bg-[#009E67] text-white shadow-lg shadow-green-100"
-             : "text-slate-700 hover:text-[#009E67] hover:bg-green-50"
+             ? "bg-[#009E67] text-white"
+             : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-200 dark:hover:text-white dark:hover:bg-transparent"
          }`
       }
     >
@@ -102,27 +98,22 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-500 border-b border-slate-200/90 shadow-xs">
+      <nav className="fixed top-0 left-0 right-0 z-500">
         <div
-          className="relative w-full flex items-center justify-between transition-all duration-700 border-b border-slate-200/60 dark:border-slate-800/60 shadow-[0_4px_24px_rgba(0,0,0,0.06)] group bg-white/95 dark:bg-slate-950/95"
+          className="relative w-full flex items-center justify-between transition-all duration-500 
+          border-b border-white/50 dark:border-white/5
+          shadow-sm dark:shadow-none
+          bg-white/80 dark:bg-[#060A14] 
+          backdrop-blur-xl backdrop-saturate-150"
           style={{
             height: "80px",
             padding: "0 2rem",
-            // background: "rgba(255, 255, 255, 0.98)", // Removed in favor of classes
-            backdropFilter: "blur(20px) saturate(180%)",
-            WebkitBackdropFilter: "blur(20px) saturate(180%)",
           }}
         >
-          {/* Premium Gradient Mesh Overlay */}
-          <div className="absolute inset-0 opacity-40 pointer-events-none z-0">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(0,158,103,0.04),transparent_50%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,rgba(16,185,129,0.03),transparent_50%)]" />
-          </div>
-
           <Link
             to="/"
             onClick={closeMenu}
-            className="flex items-center gap-3.5 group/logo relative z-10"
+            className="logo-link flex items-center gap-3.5 group/logo relative z-10"
           >
             <motion.div
               style={{ scale: logoScale }}
@@ -141,7 +132,7 @@ const Navbar = () => {
               />
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-2xl font-black tracking-tight text-slate-900 leading-none">
+              <span className="logo-text text-2xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
                 Bill
                 <span className="text-[#009E67] relative inline-block">
                   Ease
@@ -174,28 +165,30 @@ const Navbar = () => {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-3 pl-1.5 pr-4 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all active:scale-95 group relative overflow-hidden"
+                  className="profile-btn flex items-center gap-3 pl-1.5 pr-4 py-1.5 rounded-full bg-white dark:bg-[#1E2631] border border-slate-200 dark:border-white/10 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all active:scale-95 group relative overflow-hidden"
                 >
                   <div className="relative">
                     <img
                       src={user.photoURL || "https://i.pravatar.cc/100?u=test"}
                       alt="Profile"
-                      className="h-10 w-10 rounded-full object-cover border-2 border-white ring-2 ring-slate-100 group-hover:ring-green-400/40 transition-all shadow-sm"
+                      className="h-10 w-10 rounded-full object-cover border-2 border-white dark:border-[#1E2631] ring-2 ring-slate-100 dark:ring-white/5 group-hover:ring-green-400/40 transition-all shadow-sm"
                     />
-                    <div className="absolute bottom-0 right-0 h-3.5 w-3.5 bg-green-500 border-2 border-white rounded-full"></div>
+                    <div className="absolute bottom-0 right-0 h-3.5 w-3.5 bg-green-500 border-2 border-white dark:border-[#1E2631] rounded-full"></div>
                   </div>
                   <div className="flex flex-col items-start">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-tight">
+                    <span className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest leading-tight">
                       Member
                     </span>
-                    <span className="font-bold text-slate-800 leading-tight">
+                    <span className="font-bold text-slate-800 dark:text-white leading-tight">
                       {user.displayName?.split(" ")[0]}
                     </span>
                   </div>
                   <ChevronDown
                     size={14}
-                    className={`text-slate-400 transition-transform duration-500 ${
-                      dropdownOpen ? "rotate-180 text-green-600" : ""
+                    className={`text-slate-400 dark:text-slate-400 transition-transform duration-500 ${
+                      dropdownOpen
+                        ? "rotate-180 text-green-600 dark:text-green-500"
+                        : ""
                     }`}
                   />
                 </button>
@@ -223,11 +216,10 @@ const Navbar = () => {
                         damping: 28,
                         stiffness: 350,
                       }}
-                      className="absolute right-0 mt-4 w-80 rounded-3xl bg-white border border-slate-200/80 shadow-[0_20px_70px_rgba(0,0,0,0.12),0_0_1px_rgba(0,0,0,0.05)] overflow-hidden"
+                      className="profile-dropdown absolute right-0 mt-4 w-80 rounded-3xl bg-white dark:bg-[#1E2631] border border-slate-200/80 dark:border-white/10 shadow-[0_20px_70px_rgba(0,0,0,0.12),0_0_1px_rgba(0,0,0,0.05)] overflow-hidden"
                       style={{ zIndex: 9999 }}
                     >
-                      {/* Gradient Header Background */}
-                      <div className="absolute top-0 left-0 right-0 h-32 bg-linear-to-br from-[#009E67]/5 via-emerald-50/50 to-transparent pointer-events-none" />
+                      {/* Gradient component removed for flat look */}
 
                       {/* User Info Section */}
                       <div className="relative px-6 py-6 mb-1">
@@ -244,7 +236,7 @@ const Navbar = () => {
                             <div className="absolute -bottom-1 -right-1 h-5 w-5 bg-green-500 border-[3px] border-white rounded-full shadow-sm" />
                           </div>
                           <div className="flex-1 overflow-hidden">
-                            <p className="font-black text-lg text-slate-900 leading-tight truncate">
+                            <p className="font-black text-lg text-slate-900 dark:text-white leading-tight truncate">
                               {user.displayName || "User"}
                             </p>
                             <p className="text-sm text-[#009E67] font-semibold tracking-tight truncate mt-0.5">
@@ -274,10 +266,10 @@ const Navbar = () => {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.1 }}
                           onClick={handleLogout}
-                          className="w-full flex items-center justify-between px-4 py-3.5 text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-300 group/logout"
+                          className="w-full flex items-center justify-between px-4 py-3.5 text-red-600 dark:text-red-400 hover:bg-linear-to-r hover:from-red-500/5 hover:to-red-50/50 dark:hover:from-red-500/10 dark:hover:to-red-500/5 rounded-2xl transition-all duration-300 group/logout"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-red-50 rounded-xl group-hover/logout:bg-red-600 group-hover/logout:text-white transition-all duration-300">
+                            <div className="logout-icon-box p-2 bg-red-50 dark:bg-red-500/10 rounded-xl group-hover/logout:bg-red-600 group-hover/logout:text-white transition-all duration-300">
                               <LogOut size={18} />
                             </div>
                             <span className="font-bold text-sm">Sign Out</span>
@@ -296,13 +288,13 @@ const Navbar = () => {
               <div className="flex items-center gap-3 ml-2">
                 <Link
                   to="/login"
-                  className="text-sm font-bold text-slate-700 hover:text-[#009E67] transition-colors px-4 py-2"
+                  className="text-sm font-bold text-slate-700 hover:text-[#009E67] transition-colors px-4 py-2 rounded-full"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/register"
-                  className="text-sm font-bold bg-[#009E67] text-white px-7 py-3 rounded-full hover:bg-[#00875A] transition-all active:scale-95 shadow-lg shadow-green-100"
+                  className="text-sm font-bold bg-[#009E67] text-white px-7 py-3 rounded-full hover:bg-[#00875A] transition-all active:scale-95"
                 >
                   Get Started
                 </Link>
@@ -460,13 +452,13 @@ const DropdownItem = ({
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay, duration: 0.3 }}
     onClick={onClick}
-    className="w-full flex items-center gap-3 px-4 py-3 text-slate-700 hover:bg-linear-to-r hover:from-[#009E67]/5 hover:to-emerald-50/50 rounded-2xl transition-all duration-300 group relative"
+    className="w-full flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-linear-to-r hover:from-[#009E67]/5 hover:to-emerald-50/50 dark:hover:from-white/5 dark:hover:to-white/5 rounded-2xl transition-all duration-300 group relative"
   >
-    <div className="p-2 bg-slate-50 rounded-xl group-hover:bg-[#009E67] group-hover:text-white group-hover:shadow-lg group-hover:shadow-green-500/20 transition-all duration-300">
+    <div className="dropdown-icon-box p-2 bg-slate-50 dark:bg-white/5 rounded-xl group-hover:bg-[#009E67] group-hover:text-white group-hover:shadow-lg group-hover:shadow-green-500/20 transition-all duration-300">
       <Icon size={18} />
     </div>
     <div className="flex flex-col text-left flex-1">
-      <span className="font-bold text-sm text-slate-900 leading-none">
+      <span className="font-bold text-sm text-slate-900 dark:text-white leading-none">
         {label}
       </span>
       {description && (

@@ -8,6 +8,7 @@ import Register from "../pages/Auth/Register";
 import Login from "../pages/Auth/Login";
 import MyPayBills from "../pages/MyPayBills/MyPayBills";
 import PrivateRoute from "../provider/PrivateRoute";
+import GuestRoute from "../provider/GuestRoute";
 import BillDetails from "../pages/BillDetails/BillDetails";
 import RouteTitle from "../components/RouteTitle/RouteTitle";
 import Auth from "../pages/Auth/Auth";
@@ -58,25 +59,31 @@ const router = createBrowserRouter([
       {
         path: "auth",
         element: (
-          <RouteTitle title="Auth">
-            <Auth />
-          </RouteTitle>
+          <GuestRoute>
+            <RouteTitle title="Auth">
+              <Auth />
+            </RouteTitle>
+          </GuestRoute>
         ),
       },
       {
         path: "register",
         element: (
-          <RouteTitle title="Register">
-            <Register />
-          </RouteTitle>
+          <GuestRoute>
+            <RouteTitle title="Register">
+              <Register />
+            </RouteTitle>
+          </GuestRoute>
         ),
       },
       {
         path: "login",
         element: (
-          <RouteTitle title="Login">
-            <Login />
-          </RouteTitle>
+          <GuestRoute>
+            <RouteTitle title="Login">
+              <Login />
+            </RouteTitle>
+          </GuestRoute>
         ),
       },
       {

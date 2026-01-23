@@ -22,37 +22,31 @@ const AuthProvider = ({ children }) => {
 
   // 🔹 Create account
   const createUser = (email, password) => {
-    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
   // 🔹 Login with email & password
   const logIn = (email, password) => {
-    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
   // 🔹 Login with Google
   const googleSignIn = () => {
-    setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
   // 🔹 Logout
   const logOut = () => {
-    setLoading(true);
     return signOut(auth);
   };
 
   // 🔹 Reset Password
   const resetPass = (email) => {
-    setLoading(true);
     return sendPasswordResetEmail(auth, email);
   };
 
   // 🔹 Update user profile
   const updateUserProfile = (name, photo) => {
-    setLoading(true);
     return updateProfile(auth.currentUser, {
       displayName: name,
       photoURL: photo,

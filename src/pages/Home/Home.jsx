@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import Category from "./Category";
 import Slider from "./Slider";
 import SmartInsights from "./SmartInsights";
@@ -10,32 +10,25 @@ import FAQ from "./FAQ";
 import SmartAudit from "./SmartAudit";
 import Benefits from "./Benefits";
 import Comparison from "./Comparison";
-import { ThemeContext } from "../../provider/ThemeProvider";
 
 const Home = () => {
-  const { theme } = useContext(ThemeContext);
-
   return (
-    <div
-      className={`min-h-screen scroll-smooth ${
-        theme === "dark" ? "dark bg-gray-900" : "bg-gray-100"
-      }`}
-    >
+    <div className="min-h-screen scroll-smooth bg-gray-100">
       {/* Main Content */}
-      <Slider theme={theme} />
+      <Slider />
       <Features />
       <SmartAudit />
       <div id="statistics">
-        <RecentBills theme={theme} />
+        <RecentBills />
       </div>
-      <SmartInsights theme={theme} />
-      <Category theme={theme} />
+      <SmartInsights />
+      <Category />
       <Benefits />
       <Comparison />
       <Testimonials />
       <FAQ />
       <div id="contact">
-        <Service theme={theme} />
+        <Service />
       </div>
     </div>
   );
